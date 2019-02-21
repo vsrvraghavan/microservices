@@ -129,7 +129,7 @@ public class HttpUtils {
 	
 	public void updateAdminPanel(GameScoreData gameData) {
 		
-		Integer leader_list_limit = 10;
+		Integer leader_list_limit = 3;
 		
 		OneHuddleProperties props = OneHuddleProperties.getInstance();
 		
