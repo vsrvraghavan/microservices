@@ -18,6 +18,9 @@ var panel6 = document.getElementById('panel6');
 var panel7 = document.getElementById('panel7');
 var panel8 = document.getElementById('panel8');
 
+var company_panel_label = document.getElementById('company_panel_label');
+
+
 var stompClient = null;
 var username = null;
 
@@ -38,7 +41,7 @@ function connect(event) {
 
         usernamePage.classList.add('hidden');
         chatPage.classList.remove('hidden');
-
+        company_panel_label.innerHTML += " "+companyname;
         var socket = new SockJS('/ws');
         stompClient = Stomp.over(socket);
 
@@ -53,7 +56,7 @@ function onConnected() {
     stompClient.subscribe('/channel/public/'+ companyname, onMessageReceived);
 
     // Tell your username to the server
-    stompClient.send("/app/chat.addUser",
+    stompClient.send("/app/leaderboard.addUser",
         {},
         JSON.stringify({sender: username, type: 'JOIN'})
     )
@@ -77,7 +80,7 @@ function sendMessage(event) {
             type: 'DATA'
         };
 
-        stompClient.send("/app/chat.sendMessage", {}, JSON.stringify(adminMessage));
+        stompClient.send("/app/leaderboard.sendMessage", {}, JSON.stringify(adminMessage));
         messageInput.value = '';
     }
     event.preventDefault();
@@ -150,7 +153,7 @@ function setPanelData(messageObject, messageFor){
 		panel4.innerHTML = "0";
 	}
 	
-	
+/*	
 	if(messageObject.lb1 != null){
 		panel5.innerHTML = "";
 		for (var i in messageObject.lb1) {
@@ -175,6 +178,8 @@ function setPanelData(messageObject, messageFor){
 		//panel6.innerHTML = "&nbsp;";
 	}
 	
+	*/
+	
 	if(messageObject.lbC != null){
 		panel7.innerHTML = "";
 		for (var i in messageObject.lbC) {
@@ -197,6 +202,27 @@ function setPanelData(messageObject, messageFor){
 		//panel8.innerHTML = "&nbsp;";
 	}
 
+	
+	if(messageObject.leaderBoardRankData != null){
+		for (var i in messageObject.leaderBoardRankData) {				
+			var keys = [];
+			Object.entries(messageObject.leaderBoardRankData[i]).forEach(function([key, value]){
+		        if(keys.indexOf(key) == -1)
+		        {
+		        	var scoreboardElement =  document.getElementById(key);		        	
+		        	if (typeof(scoreboardElement) != 'undefined' && scoreboardElement != null)
+		        	{
+		        		for (var i in value) {
+		        			var lbObject = value[i];
+		        			var playerRankData = "<div class=\"player_container\"><div>"+lbObject.member +"</div><div>:</div><div>"+lbObject.score +"</div></div>";
+		        			scoreboardElement.innerHTML += playerRankData;
+		        		}		        		
+		        	}		        	
+		        }
+		    });			
+		}				
+	}
+	
 }
 
 

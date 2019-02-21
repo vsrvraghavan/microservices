@@ -4,6 +4,7 @@
 package com.onehuddle.commons.pojo;
 
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -23,6 +24,11 @@ public class AdminPanelMessageData {
 	
 	private List<LeaderData> lbD;
 	private List<LeaderData> lbC;
+	
+	
+	private List<Map<String, List<LeaderData>>> leaderBoardRankData; 
+	
+	
 	
 	/**
 	 * @return the gameSessionsLaunched
@@ -119,6 +125,12 @@ public class AdminPanelMessageData {
 	 */
 	public void setLbC(List<LeaderData> lbC) {
 		this.lbC = lbC;
+	}
+	public List<Map<String, List<LeaderData>>> getLeaderBoardRankData() {
+		return leaderBoardRankData;
+	}
+	public void setLeaderBoardRankData(List<Map<String, List<LeaderData>>> leaderBoardRankData) {
+		this.leaderBoardRankData = leaderBoardRankData;
 	}
 
 }

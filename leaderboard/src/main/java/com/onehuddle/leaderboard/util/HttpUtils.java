@@ -10,7 +10,10 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
@@ -161,6 +164,7 @@ public class HttpUtils {
 				String adminPanelServer = props.getProperty("admin_panel_server", "172.18.0.3");
 				String adminPanelServerPort = props.getProperty("admin_panel_server_port", "9000");
 				
+				/*
 				if(props.getProperty("game_panel_1_name").equalsIgnoreCase(gameData.getGameID())) {					
 					apmd.setLb1(game_leaderlist);
 				}else if(props.getProperty("game_panel_2_name").equalsIgnoreCase(gameData.getGameID())) {
@@ -185,6 +189,50 @@ public class HttpUtils {
 			        apmd.setLbD(department_leaderlist);
 				}
 				
+				*/
+				
+				
+				List<Map<String, List<LeaderData>>> leaderBoardRankDataList = new ArrayList<Map<String, List<LeaderData>>>();
+				
+				
+				Map<String, List<LeaderData>> leaderBoardRankData = new HashMap<String, List<LeaderData>>();
+				
+				
+				leaderBoardRankData.put("game_scoreboard_"+gameData.getGameID(), game_leaderlist);
+				
+				
+				if(props.getProperty("game_panel_1_name").equalsIgnoreCase(gameData.getGameID())) {					
+					apmd.setLb1(game_leaderlist);
+				}else if(props.getProperty("game_panel_2_name").equalsIgnoreCase(gameData.getGameID())) {
+					apmd.setLb2(game_leaderlist);
+				}
+				
+				
+				leaderBoardRankDataList.add(leaderBoardRankData);
+					
+					//apmd.setLb1(game_leaderlist);
+
+					//apmd.setLb2(game_leaderlist);
+				apmd.setLeaderBoardRankData(leaderBoardRankDataList);
+				
+				System.out.println("Company Name In Property File : "+props.getProperty("company_name"));
+				System.out.println("Company Name In Data  : "+gameData.getCompanyID());
+				
+				
+					
+					lb = new CompanyLeaderboard("company_"+gameData.getCompanyID()+"_leaderboard");                      
+					List<LeaderData>  company_leaderlist = lb.mergeScoresIn(gameData.getCompanyID(), 1, false, leader_list_limit);
+					apmd.setLbC(company_leaderlist);
+
+				
+				System.out.println("Department Name In Property File : "+props.getProperty("department_name"));
+				System.out.println("Department Name In Data  : "+gameData.getDepartmentID());
+				
+				
+					lb = new CompanyLeaderboard("company_"+gameData.getCompanyID()+"_department_"+gameData.getDepartmentID()+"_leaderboard");                      			        
+					List<LeaderData>  department_leaderlist = lb.departmentScoresIn(gameData.getCompanyID(), gameData.getDepartmentID(), 1, false, leader_list_limit);
+			        apmd.setLbD(department_leaderlist);
+
 				
 				
 				apm.setType(AdminPanelMessageType.DATA);

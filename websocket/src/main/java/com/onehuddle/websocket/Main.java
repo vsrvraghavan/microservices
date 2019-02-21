@@ -20,13 +20,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.onehuddle.commons.pojo.AdminPanelMessage;
+
+import com.onehuddle.commons.pojo.*;
 import com.onehuddle.commons.pojo.AdminPanelMessage.AdminPanelMessageType;
-import com.onehuddle.commons.pojo.AdminPanelMessageData;
-import com.onehuddle.commons.pojo.LeaderData;
-
-
-
 
 @SpringBootApplication
 @RestController
@@ -55,7 +51,10 @@ public class Main {
 
 		System.out.println("In adminpanel POST");
 		System.out.println(data);		
-		this.webSocket.convertAndSend("/channel/public/"+ companyId, setAdminPanelMessage(data));				
+		//this.webSocket.convertAndSend("/app/chat.sendMessage/"+ companyId, setAdminPanelMessage(data));
+		
+		this.webSocket.convertAndSend("/channel/public/"+ companyId, setAdminPanelMessage(data));
+		
 		return String.valueOf("posted");
 		
     }
