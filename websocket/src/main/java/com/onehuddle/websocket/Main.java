@@ -14,6 +14,7 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -49,12 +50,12 @@ public class Main {
 		SpringApplication.run(Main.class, args);
 	}
 	
-	@RequestMapping(value="/adminpanel", method = RequestMethod.POST)
-    public String pushPanelData(@RequestBody AdminPanelMessage data) {
+	@RequestMapping(value="/adminpanel/{companyId}", method = RequestMethod.POST)
+    public String pushPanelData(@PathVariable String companyId,  @RequestBody AdminPanelMessage data) {
 
 		System.out.println("In adminpanel POST");
 		System.out.println(data);		
-		this.webSocket.convertAndSend("/channel/public", setAdminPanelMessage(data));				
+		this.webSocket.convertAndSend("/channel/public/"+ companyId, setAdminPanelMessage(data));				
 		return String.valueOf("posted");
 		
     }

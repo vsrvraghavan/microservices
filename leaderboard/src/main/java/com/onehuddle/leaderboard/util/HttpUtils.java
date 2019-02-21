@@ -139,7 +139,7 @@ public class HttpUtils {
 		System.out.println("Game2 Name In Property File : "+props.getProperty("game_panel_2_name", "GAME2"));
 		System.out.println("Game Name In Data  : "+gameData.getGameID());
 		
-		
+		/*
 		if(		
 				(props.getProperty("company_name").equalsIgnoreCase(gameData.getCompanyID()))
 				||
@@ -147,6 +147,8 @@ public class HttpUtils {
 				|| 
 				(props.getProperty("game_panel_2_name") != null && props.getProperty("game_panel_2_name").equalsIgnoreCase(gameData.getGameID()))				
 			){
+			
+			*/
 			
 			try {
 				
@@ -156,7 +158,7 @@ public class HttpUtils {
 				Gson gson = new Gson();
 				AdminPanelMessage apm = new AdminPanelMessage();
 				AdminPanelMessageData apmd = new AdminPanelMessageData();
-				String adminPanelServer = props.getProperty("admin_panel_server", "172.18.0.22");
+				String adminPanelServer = props.getProperty("admin_panel_server", "172.18.0.3");
 				String adminPanelServerPort = props.getProperty("admin_panel_server_port", "9000");
 				
 				if(props.getProperty("game_panel_1_name").equalsIgnoreCase(gameData.getGameID())) {					
@@ -195,7 +197,8 @@ public class HttpUtils {
 				
 				
 				
-				URL url = new URL("http://"+adminPanelServer+":"+adminPanelServerPort+"/adminpanel");
+				URL url = new URL("http://"+adminPanelServer+":"+adminPanelServerPort+"/adminpanel/"+ gameData.getCompanyID());
+				//URL url = new URL("http://172.18.0.3:9000/adminpanel");
 				
 				System.out.println("url : " + url);
 				
@@ -249,8 +252,9 @@ public class HttpUtils {
 
 			 }
 			
-			
+		/*	
 		}
+		*/
 		
 		
 	}
