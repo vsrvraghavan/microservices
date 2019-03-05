@@ -209,7 +209,8 @@ function setPanelData(messageObject, messageFor){
 			Object.entries(messageObject.leaderBoardRankData[i]).forEach(function([key, value]){
 		        if(keys.indexOf(key) == -1)
 		        {
-		        	var scoreboardElement =  document.getElementById(key);		        	
+		        	var scoreboardElement =  document.getElementById(key);		 
+		        	scoreboardElement.innerHTML = "";
 		        	if (typeof(scoreboardElement) != 'undefined' && scoreboardElement != null)
 		        	{
 		        		for (var i in value) {

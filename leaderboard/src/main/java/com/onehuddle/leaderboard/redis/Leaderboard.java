@@ -269,6 +269,52 @@ public class Leaderboard {
 	public double changeScoreForMemberIn(String leaderboardName, String member, double delta) {
 		return _jedis.zincrby(leaderboardName, delta, member);
 	}
+	
+	
+	
+	/**
+	 * Change the score for a member by a certain delta in the named leaderboard
+	 *
+	 * @param leaderboardName Leaderboard
+	 * @param member Member
+	 * @param delta Score delta
+	 * @return Updated score
+	 */
+	public List<Object> updateContestScoreForMemberIn(String companyId, String contestId, String locationId, String departmentId, String gameId, String member, double delta) {
+		
+		Transaction transaction = _jedis.multi();
+		
+		String leader_board = "company_"+companyId+"_contest_"+contestId+"_leaderboard";		
+		transaction.zincrby(leader_board, delta, member);
+		
+		leader_board = "company"+companyId+"_contest_"+contestId+"_game_"+gameId+"_leaderboard";		
+		transaction.zincrby(leader_board, delta, member);
+		
+		leader_board = "company"+companyId+"_contest_"+contestId+"_location_"+locationId+"_leaderboard";		
+		transaction.zincrby(leader_board, delta, member);
+		
+		leader_board = "company"+companyId+"_contest_"+contestId+"_location_"+locationId+"_game_"+gameId+"_leaderboard";		
+		transaction.zincrby(leader_board, delta, member);
+		
+		leader_board = "company"+companyId+"_contest_"+contestId+"_location_"+locationId+"_department_"+departmentId+"_leaderboard";		
+		transaction.zincrby(leader_board, delta, member);
+		
+		leader_board = "company"+companyId+"_contest_"+contestId+"_location_"+locationId+"_department_"+departmentId+"_game_"+gameId+"_leaderboard";		
+		transaction.zincrby(leader_board, delta, member);
+		
+		leader_board = "company"+companyId+"_contest_"+contestId+"_department_"+departmentId+"_leaderboard";		
+		transaction.zincrby(leader_board, delta, member);
+		
+		leader_board = "company"+companyId+"_contest_"+contestId+"_department_"+departmentId+"_game_"+gameId+"_leaderboard";		
+		transaction.zincrby(leader_board, delta, member);
+		
+		
+		return transaction.exec();
+		
+	}
+	
+	
+	
 
 	/**
 	 * Check to see if member is in the current leaderboard

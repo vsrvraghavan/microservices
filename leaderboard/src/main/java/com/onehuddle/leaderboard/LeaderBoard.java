@@ -3,6 +3,7 @@
  */
 package com.onehuddle.leaderboard;
 
+import java.io.IOException;
 import java.util.Hashtable;
 import java.util.List;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -19,7 +20,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.onehuddle.commons.pojo.ContestData;
 import com.onehuddle.commons.pojo.LeaderData;
+import com.onehuddle.commons.pojo.LocationsAndDepartments;
+import com.onehuddle.commons.pojo.PlayersAndPoint;
+import com.onehuddle.commons.pojo.RegisteredPlayer;
 import com.onehuddle.leaderboard.pojo.GameData;
 import com.onehuddle.leaderboard.pojo.GameScoreData;
 
@@ -187,6 +193,141 @@ public class LeaderBoard {
         
 		return String.valueOf(user_rank);		
     }
+	
+	
+	
+	public ObjectNode updateScore(ContestData contestData) {
+		ObjectMapper mapper = new ObjectMapper();
+		
+		ObjectNode node = mapper.createObjectNode();		
+		ObjectNode company_node = mapper.createObjectNode();		
+		ObjectNode conates_node = mapper.createObjectNode();		
+		ObjectNode game_node = mapper.createObjectNode();		
+		ObjectNode department_node = mapper.createObjectNode();
+		
+		RegisteredPlayer regplayer = contestData.getPlayersAndPoints().get(0).getRegisteredPlayer();
+		PlayersAndPoint player_point = contestData.getPlayersAndPoints().get(0);
+		
+		String companyId = contestData.getCompanyName();
+		String contestId = contestData.getContestID();
+		String gameId = regplayer.getGameID();
+		String departmentId = regplayer.getDepartmentID();
+		String memberId = regplayer.getPlayerID();				
+		String locationId = regplayer.getLocationID();
+		
+		Long points_earned = player_point.getPointsEarned();
+		
+		
+		CompanyLeaderboard company_contest_leaderboard = new CompanyLeaderboard("company_"+companyId+"_contest_"+contestId+"_leaderboard");
+			
+		company_contest_leaderboard.putCompanyContestDepartmentMembersIn(companyId, contestId, departmentId, memberId);
+		
+		//Double user_score = company_contest_leaderboard.changeScoreFor(memberId, points_earned);				
+			
+		List<Object> response = company_contest_leaderboard.updateContestScoreForMemberIn(companyId, contestId, locationId, departmentId, gameId, memberId, points_earned);
+		
+		try {
+			String jsonInString = mapper.writeValueAsString(response);
+			System.out.println(jsonInString);
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        
+        
+        
+		return null;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	@RequestMapping(value="/contestleaderBoard", method = RequestMethod.POST)
+    public ObjectNode updateContestLeaderboard(@RequestBody ContestData contestData) { 
+		
+		ObjectMapper mapper = new ObjectMapper();
+		
+		ObjectNode node = mapper.createObjectNode();
+		
+		ObjectNode company_node = mapper.createObjectNode();
+		
+		ObjectNode conates_node = mapper.createObjectNode();
+		
+		ObjectNode game_node = mapper.createObjectNode();
+		
+		ObjectNode department_node = mapper.createObjectNode();
+		
+		Long user_rank = 0L;
+		
+		switch(contestData.getContestStatus()) {
+				case "STARTED" :
+					String leader_board_name = "company_"+contestData.getCompanyName()+"_contest_"+contestData.getContestID(); 
+					CompanyLeaderboard contest_started_lb = new CompanyLeaderboard(leader_board_name);					
+					contest_started_lb.putCompanyContestsIn(contestData.getCompanyName(), contestData.getContestID());
+					
+					for (LocationsAndDepartments location_department : contestData.getLocationsAndDepartments()) { 			             
+						String locationId = location_department.getLocation();
+						contest_started_lb.putCompanyContestLocationsIn(contestData.getCompanyName(), contestData.getContestID(), locationId);
+						for(String departmentId: location_department.getDepartment()) {							
+							contest_started_lb.putCompanyContestDepartmentsIn(contestData.getCompanyName(), contestData.getContestID(), departmentId);
+							contest_started_lb.putCompanyContestLocationDepartmentsIn(contestData.getCompanyName(), contestData.getContestID(), locationId, departmentId);
+						}																		
+			        } 
+					
+					for(String gameId: contestData.getGamesAllowed()) {
+						contest_started_lb.putCompanyContestGamesIn(contestData.getCompanyName(), contestData.getContestID(), gameId);
+					}
+			
+					/*
+					for(int i=0;i<contestData.getLocationsAndDepartments().size();i++) {
+						String locationId = contestData.getLocationsAndDepartments().get(i).getLocation();
+						contest_started_lb.putCompanyContestLocationsIn(contestData.getCompanyName(), contestData.getContestID(), locationId);
+						for(int j=0;j<contestData.getLocationsAndDepartments().get(i).getDepartment().size();i++) {
+							String departmentId = contestData.getLocationsAndDepartments().get(i).getDepartment().get(j);							
+							contest_started_lb.putCompanyContestDepartmentsIn(contestData.getCompanyName(), contestData.getContestID(), departmentId);
+							contest_started_lb.putCompanyContestLocationDepartmentsIn(contestData.getCompanyName(), contestData.getContestID(), locationId, departmentId);							
+						}						
+					}
+					
+					for(int i=0;i<contestData.getGamesAllowed().size();i++) {
+						String gameId = contestData.getGamesAllowed().get(i);
+						contest_started_lb.putCompanyContestGamesIn(contestData.getCompanyName(), contestData.getContestID(), gameId);						
+					}
+					*/					
+					
+					break;
+								
+				case "CONTINUING" :
+					
+					updateScore(contestData);
+					
+					break;
+				case "CONTINUING_bak" :
+					
+					break;
+					
+					
+					
+				case "STOPPED" :
+	
+					break;	
+
+				case "ENDED" :
+					
+					break;	
+				
+				default :
+					
+					break;
+		
+		}
+		
+		return node;
+	}
 	
 	
 	

@@ -20,7 +20,10 @@ import com.google.gson.Gson;
 import com.onehuddle.commons.pojo.AdminPanelMessage;
 import com.onehuddle.commons.pojo.AdminPanelMessage.AdminPanelMessageType;
 import com.onehuddle.commons.pojo.AdminPanelMessageData;
+import com.onehuddle.commons.pojo.ContestData;
 import com.onehuddle.commons.pojo.LeaderData;
+import com.onehuddle.commons.pojo.PlayersAndPoint;
+import com.onehuddle.commons.pojo.RegisteredPlayer;
 import com.onehuddle.leaderboard.OneHuddleProperties;
 
 import com.onehuddle.leaderboard.pojo.GameScoreData;
@@ -126,12 +129,49 @@ public class HttpUtils {
 		}				
 	}
 	
+	public void updateAdminPanel(ContestData contestData) {
+		
+		Integer leader_list_limit = 3;
+		
+		OneHuddleProperties props = OneHuddleProperties.getInstance();
+		String adminPanelServer = props.getProperty("admin_panel_server", "172.18.0.3");
+		String adminPanelServerPort = props.getProperty("admin_panel_server_port", "9000");
+		
+		RegisteredPlayer regplayer = contestData.getPlayersAndPoints().get(0).getRegisteredPlayer();
+		PlayersAndPoint player_point = contestData.getPlayersAndPoints().get(0);
+		CompanyLeaderboard contest_game_lb = new CompanyLeaderboard("company_"+contestData.getCompanyName()+"_contest_"+contestData.getContestID()+ "_game_"+regplayer.getGameID()+"_leaderboard");
+						
+		List<Map<String, List<LeaderData>>> leaderBoardRankDataList = new ArrayList<Map<String, List<LeaderData>>>();				
+		Map<String, List<LeaderData>> leaderBoardRankData = new HashMap<String, List<LeaderData>>();		
+		
+		
+		List<LeaderData>  game_leaderlist = contest_game_lb.leadersInGame(1, false, leader_list_limit, regplayer.getGameID());
+		leaderBoardRankData.put("game_scoreboard_"+regplayer.getGameID(), game_leaderlist);		
+						
+		List<LeaderData>  company_contest_leaderlist = contest_game_lb.mergeScoresIn(contestData.getCompanyName(), contestData.getContestID(), 1, false, leader_list_limit);		
+		leaderBoardRankData.put("contest_scoreboard_"+contestData.getContestID(), company_contest_leaderlist);
+				
+		leaderBoardRankDataList.add(leaderBoardRankData);
+		
+	}
+	
+	
+	public void updateContestDashboard(ContestData contestData) {
+		
+		
+		
+		
+		
+	}
+	
+	
 	
 	public void updateAdminPanel(GameScoreData gameData) {
 		
 		Integer leader_list_limit = 3;
 		
 		OneHuddleProperties props = OneHuddleProperties.getInstance();
+		
 		
 		System.out.println("Company Name In Property File : "+props.getProperty("company_name", "ABC"));
 		System.out.println("Company Name In Data  : "+gameData.getCompanyID());
