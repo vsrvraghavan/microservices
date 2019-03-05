@@ -8,6 +8,12 @@ target/
 .project
 .settings
 .springBeans
+./target
+./commons/target
+./leaderboard/target
+./websocket/target
+.DS_Store
+*.tar.gz
 
 ### IntelliJ IDEA ###
 .idea

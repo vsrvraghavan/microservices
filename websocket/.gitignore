@@ -8,6 +8,9 @@ target/
 .project
 .settings
 .springBeans
+./target
+.DS_Store
+./*.tar.gz
 
 ### IntelliJ IDEA ###
 .idea
