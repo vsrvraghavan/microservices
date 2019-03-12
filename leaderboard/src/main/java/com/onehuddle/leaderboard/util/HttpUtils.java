@@ -15,12 +15,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
+import com.onehuddle.commons.contest.pojo.*;
 import com.onehuddle.commons.pojo.AdminPanelMessage;
 import com.onehuddle.commons.pojo.AdminPanelMessage.AdminPanelMessageType;
 import com.onehuddle.commons.pojo.AdminPanelMessageData;
 import com.onehuddle.commons.pojo.ContestData;
+import com.onehuddle.commons.pojo.ContestLeaderboardMessage;
+import com.onehuddle.commons.pojo.ContestLeaderboardMessage.LBMessageType;
 import com.onehuddle.commons.pojo.LeaderData;
 import com.onehuddle.commons.pojo.PlayersAndPoint;
 import com.onehuddle.commons.pojo.RegisteredPlayer;
@@ -155,10 +159,247 @@ public class HttpUtils {
 		
 	}
 	
+	public void publishContestDashboard(String companyId, DashboardData dahsBoardData) {
+		OneHuddleProperties props = OneHuddleProperties.getInstance();
+		String adminPanelServer = props.getProperty("admin_panel_server", "172.18.0.3");
+		String adminPanelServerPort = props.getProperty("admin_panel_server_port", "9000");
+		
+		
+				
+		ObjectMapper mapper = new ObjectMapper();
+		
+		try {
+			URL url = new URL("http://"+adminPanelServer+":"+adminPanelServerPort+"/adminpanel/"+companyId+"/"+dahsBoardData.getContestName());
+			
+			
+			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+			conn.setDoOutput(true);
+			conn.setRequestMethod("POST");
+			conn.setRequestProperty("Content-Type", "application/json");
+
+			Gson gson = new Gson();
+			//String input1 = "{\"type\":\"DATA\",\"content\":{\"gameSessionsLaunched\":1,\"gameSessionsFinishedByPlayer\":2,\"gameSessionsFinishedByManager\":4,\"gameSessionsFinishedByTimeout\":3,\"lb1\":[{\"member\":\"Raga\",\"score\":1000.0,\"rank\":3,\"gameId\":\"GAME1\",\"department\":null,\"group\":null},{\"member\":\"Nirmalya\",\"score\":1003.0,\"rank\":2,\"gameId\":\"GAME1\",\"department\":null,\"group\":null},{\"member\":\"Andy\",\"score\":1010.0,\"rank\":1,\"gameId\":\"GAME1\",\"department\":null,\"group\":null}],\"lb2\":null},\"messageFor\":\"all\"}";//mapper.writeValueAsString(apm);
+			
+			
+			ContestLeaderboardMessage lbmessage = new ContestLeaderboardMessage();
+			
+			lbmessage.setType(LBMessageType.DATA);
+			lbmessage.setMessageFor("all");
+			lbmessage.setContent(dahsBoardData);
+			
+			
+			String input = mapper.writeValueAsString(lbmessage);
+			System.out.println("lbmessage : ");
+			System.out.println(input);
+			
+			
+			//String input =  gson.toJson(lbmessage);
+			
+			OutputStream os = conn.getOutputStream();
+			os.write(input.getBytes());
+			os.flush();
+
+			if (conn.getResponseCode() != HttpURLConnection.HTTP_OK) {
+				throw new RuntimeException("Failed : HTTP error code : "
+					+ conn.getResponseCode());
+			}
+
+			BufferedReader br = new BufferedReader(new InputStreamReader(
+					(conn.getInputStream())));
+
+			String output;
+			System.out.println("Output from Server .... \n");
+			while ((output = br.readLine()) != null) {
+				System.out.println(output);
+			}
+
+			conn.disconnect();
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 	
-	public void updateContestDashboard(ContestData contestData) {
+	//public void updateContestDashboard(String companyId, String contestId, String gameId, String locationId, String departmentId) {
+	public void updateContestDashboard(String companyId, String contestId) {	
+		DashboardData dahsBoardData = new DashboardData();
+		
+		// Contest Leaderboard
+		String leader_boardname = "company_"+companyId+"_contest_"+contestId+"_leaderboard";		
+		CompanyLeaderboard lb = new CompanyLeaderboard(leader_boardname);						
+		ContestLB contestLb = new ContestLB();		
+		contestLb.setLB(lb.contestLeadersIn(1, false));
+		
+		// Contest game leaderboard
+								
+		List<String> game_members = lb.getMembersIn("company_"+companyId+"_contest_"+contestId+"_games");	
+		
+		List<GameLB> gameLBList = new ArrayList<GameLB>();				
+		
+		for(String gameId : game_members) {
+			GameLB game_lb = new GameLB();
+			leader_boardname = "company_"+companyId+"_contest_"+contestId+"_game_"+gameId+"_leaderboard";
+			lb = new CompanyLeaderboard(leader_boardname);
+			game_lb.setGameID(gameId);
+			game_lb.setLB(lb.contestLeadersIn(1, false));
+			gameLBList.add(game_lb);			
+		}
+		contestLb.setGameLB(gameLBList);
+		
+				
+		// Contest departments leaderboard
+		List<String>  dept_members = lb.getMembersIn("company_"+companyId+"_contest_"+contestId+"_departments");
+		List<DepartmentLB> departmentLBList = new ArrayList<DepartmentLB>();	
+		for(String departmentId : dept_members) {
+			DepartmentLB dept_lb = new DepartmentLB();
+			leader_boardname = "company_"+companyId+"_contest_"+contestId+"_department_"+departmentId+"_leaderboard";
+			lb = new CompanyLeaderboard(leader_boardname);
+			dept_lb.setDepartmentID(departmentId);			
+			dept_lb.setLB(lb.contestLeadersIn(1, false));
+			List<GameLB> deptGameLBList = new ArrayList<GameLB>();
+			for(String gameId : game_members) {
+				GameLB game_lb = new GameLB();
+				leader_boardname = "company_"+companyId+"_contest_"+contestId+"_department_"+departmentId+"_game_"+gameId+"_leaderboard";
+				lb = new CompanyLeaderboard(leader_boardname);
+				game_lb.setGameID(gameId);
+				game_lb.setLB(lb.contestLeadersIn(1, false));
+				deptGameLBList.add(game_lb);
+			}
+			dept_lb.setGameLB(deptGameLBList);
+			departmentLBList.add(dept_lb);
+		}
+		contestLb.setDepartmentLB(departmentLBList);
+		
+		// Contest locations leaderboard
+		List<String>  location_members = lb.getMembersIn("company_"+companyId+"_contest_"+contestId+"_locations");
+		List<LocationLB> locationLBList = new ArrayList<LocationLB>();
+		for(String locationId : location_members) {
+			LocationLB location_lb = new LocationLB();
+			leader_boardname = "company_"+companyId+"_contest_"+contestId+"_location_"+locationId+"_leaderboard";
+			lb = new CompanyLeaderboard(leader_boardname);
+			location_lb.setLocationID(locationId);
+			location_lb.setLB(lb.contestLeadersIn(1, false));
+			List<GameLB> locationGameLBList = new ArrayList<GameLB>();
+			for(String gameId : game_members) {
+				GameLB game_lb = new GameLB();
+				leader_boardname = "company_"+companyId+"_contest_"+contestId+"_location_"+locationId+"_game_"+gameId+"_leaderboard";
+				lb = new CompanyLeaderboard(leader_boardname);
+				game_lb.setGameID(gameId);
+				game_lb.setLB(lb.contestLeadersIn(1, false));
+				locationGameLBList.add(game_lb);
+			}
+			location_lb.setGameLB(locationGameLBList);
+			
+			
+			List<String>  location_dept_members = lb.getMembersIn("company_"+companyId+"_contest_"+contestId+"_location_"+locationId+"_departments");
+			List<DepartmentLB> locationDepartmentLBList = new ArrayList<DepartmentLB>();	
+			for(String departmentId : location_dept_members) {
+				DepartmentLB dept_lb = new DepartmentLB();
+				leader_boardname = "company_"+companyId+"_contest_"+contestId+"_location_"+locationId+"_department_"+departmentId+"_leaderboard";
+				lb = new CompanyLeaderboard(leader_boardname);
+				dept_lb.setDepartmentID(departmentId);			
+				dept_lb.setLB(lb.contestLeadersIn(1, false));
+				List<GameLB> locationDeptGameLBList = new ArrayList<GameLB>();
+				for(String gameId : game_members) {
+					GameLB dept_game_lb = new GameLB();
+					leader_boardname = "company_"+companyId+"_contest_"+contestId+"_location_"+locationId+"_department_"+departmentId+"_game_"+gameId+"_leaderboard";
+					lb = new CompanyLeaderboard(leader_boardname);
+					dept_game_lb.setGameID(gameId);
+					dept_game_lb.setLB(lb.contestLeadersIn(1, false));
+					locationDeptGameLBList.add(dept_game_lb);
+				}
+				dept_lb.setGameLB(locationDeptGameLBList);
+				locationDepartmentLBList.add(dept_lb);
+			}
+			location_lb.setDepartmentLB(locationDepartmentLBList);
+			
+			locationLBList.add(location_lb);
+		}
+		
+		contestLb.setLocationLB(locationLBList);
+		
+		DashboardData dashbordData = new DashboardData();
+		
+		dashbordData.setContestName(contestId);
+		
+		dashbordData.setContestLB(contestLb);
 		
 		
+		OneHuddleProperties props = OneHuddleProperties.getInstance();
+		String adminPanelServer = props.getProperty("admin_panel_server", "172.18.0.3");
+		String adminPanelServerPort = props.getProperty("admin_panel_server_port", "9000");
+		
+		
+		
+		
+		
+				
+		ObjectMapper mapper = new ObjectMapper();
+		
+		try {
+			URL url = new URL("http://"+adminPanelServer+":"+adminPanelServerPort+"/adminpanel/"+companyId+"/"+contestId);
+			
+			
+			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+			conn.setDoOutput(true);
+			conn.setRequestMethod("POST");
+			conn.setRequestProperty("Content-Type", "application/json");
+
+			Gson gson = new Gson();
+			//String input1 = "{\"type\":\"DATA\",\"content\":{\"gameSessionsLaunched\":1,\"gameSessionsFinishedByPlayer\":2,\"gameSessionsFinishedByManager\":4,\"gameSessionsFinishedByTimeout\":3,\"lb1\":[{\"member\":\"Raga\",\"score\":1000.0,\"rank\":3,\"gameId\":\"GAME1\",\"department\":null,\"group\":null},{\"member\":\"Nirmalya\",\"score\":1003.0,\"rank\":2,\"gameId\":\"GAME1\",\"department\":null,\"group\":null},{\"member\":\"Andy\",\"score\":1010.0,\"rank\":1,\"gameId\":\"GAME1\",\"department\":null,\"group\":null}],\"lb2\":null},\"messageFor\":\"all\"}";//mapper.writeValueAsString(apm);
+			
+			
+			ContestLeaderboardMessage lbmessage = new ContestLeaderboardMessage();
+			
+			lbmessage.setType(LBMessageType.DATA);
+			lbmessage.setMessageFor("all");
+			lbmessage.setContent(dashbordData);
+			
+			
+			String input = mapper.writeValueAsString(lbmessage);
+			System.out.println("lbmessage : ");
+			System.out.println(input);
+			
+			
+			//String input =  gson.toJson(lbmessage);
+			
+			OutputStream os = conn.getOutputStream();
+			os.write(input.getBytes());
+			os.flush();
+
+			if (conn.getResponseCode() != HttpURLConnection.HTTP_OK) {
+				throw new RuntimeException("Failed : HTTP error code : "
+					+ conn.getResponseCode());
+			}
+
+			BufferedReader br = new BufferedReader(new InputStreamReader(
+					(conn.getInputStream())));
+
+			String output;
+			System.out.println("Output from Server .... \n");
+			while ((output = br.readLine()) != null) {
+				System.out.println(output);
+			}
+
+			conn.disconnect();
+			
+			
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		
 		

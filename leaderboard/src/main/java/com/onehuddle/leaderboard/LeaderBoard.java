@@ -6,6 +6,9 @@ package com.onehuddle.leaderboard;
 import java.io.IOException;
 import java.util.Hashtable;
 import java.util.List;
+
+import javax.ws.rs.QueryParam;
+
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.onehuddle.commons.contest.pojo.DashboardData;
 import com.onehuddle.commons.pojo.ContestData;
 import com.onehuddle.commons.pojo.LeaderData;
 import com.onehuddle.commons.pojo.LocationsAndDepartments;
@@ -213,37 +217,38 @@ public class LeaderBoard {
 		String gameId = regplayer.getGameID();
 		String departmentId = regplayer.getDepartmentID();
 		String memberId = regplayer.getPlayerID();				
-		String locationId = regplayer.getLocationID();
-		
+		String locationId = regplayer.getLocationID();		
 		Long points_earned = player_point.getPointsEarned();
 		
 		
-		CompanyLeaderboard company_contest_leaderboard = new CompanyLeaderboard("company_"+companyId+"_contest_"+contestId+"_leaderboard");
-			
-		company_contest_leaderboard.putCompanyContestDepartmentMembersIn(companyId, contestId, departmentId, memberId);
+		CompanyLeaderboard company_contest_leaderboard = new CompanyLeaderboard("company_"+companyId+"_contest_"+contestId+"_leaderboard");			
 		
-		//Double user_score = company_contest_leaderboard.changeScoreFor(memberId, points_earned);				
-			
-		List<Object> response = company_contest_leaderboard.updateContestScoreForMemberIn(companyId, contestId, locationId, departmentId, gameId, memberId, points_earned);
-		
-		try {
-			String jsonInString = mapper.writeValueAsString(response);
-			System.out.println(jsonInString);
-		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-        
-        
-        
+		company_contest_leaderboard.putContestMemberDetails(companyId, contestId, memberId, locationId, departmentId);		
+		company_contest_leaderboard.putCompanyContestDepartmentMembersIn(companyId, contestId, departmentId, memberId);			
+		ObjectNode response = company_contest_leaderboard.updateContestScoreForMemberIn(companyId, contestId, locationId, departmentId, gameId, memberId, points_earned);		
+		HttpUtils utils = new HttpUtils();			
+		utils.publishContestDashboard(companyId, company_contest_leaderboard.getContestDashboard(companyId, contestId));
+		        
 		return null;
 	}
 	
 	
 	
+	@RequestMapping(value="/contestleaderBoard/{companyId}/{contestId}", method = RequestMethod.GET)
+    public DashboardData getContestLeaderboard(@PathVariable String companyId, @PathVariable String contestId) { 
+		
+		CompanyLeaderboard company_contest_leaderboard = new CompanyLeaderboard("company_"+companyId+"_contest_"+contestId+"_leaderboard");
+		return company_contest_leaderboard.getContestDashboard(companyId, contestId);
+	}
 	
 	
-	
+	@RequestMapping(value="/contestUserleaderBoard/{companyId}/{contestId}", method = RequestMethod.GET)
+    public ObjectNode getContestUserLeaderboard(@PathVariable String companyId, @PathVariable String contestId, @RequestParam("user_id") String userId) { 
+		
+		CompanyLeaderboard company_contest_leaderboard = new CompanyLeaderboard("company_"+companyId+"_contest_"+contestId+"_leaderboard");
+		System.out.println("userId :  "+ userId);
+		return company_contest_leaderboard.getContestScoreForMemberIn(companyId, contestId, userId);
+	}
 	
 	
 	@RequestMapping(value="/contestleaderBoard", method = RequestMethod.POST)
@@ -263,47 +268,48 @@ public class LeaderBoard {
 		
 		Long user_rank = 0L;
 		
+		
+		 
+		
 		switch(contestData.getContestStatus()) {
 				case "STARTED" :
-					String leader_board_name = "company_"+contestData.getCompanyName()+"_contest_"+contestData.getContestID(); 
-					CompanyLeaderboard contest_started_lb = new CompanyLeaderboard(leader_board_name);					
-					contest_started_lb.putCompanyContestsIn(contestData.getCompanyName(), contestData.getContestID());
-					
-					for (LocationsAndDepartments location_department : contestData.getLocationsAndDepartments()) { 			             
-						String locationId = location_department.getLocation();
-						contest_started_lb.putCompanyContestLocationsIn(contestData.getCompanyName(), contestData.getContestID(), locationId);
-						for(String departmentId: location_department.getDepartment()) {							
-							contest_started_lb.putCompanyContestDepartmentsIn(contestData.getCompanyName(), contestData.getContestID(), departmentId);
-							contest_started_lb.putCompanyContestLocationDepartmentsIn(contestData.getCompanyName(), contestData.getContestID(), locationId, departmentId);
-						}																		
-			        } 
-					
-					for(String gameId: contestData.getGamesAllowed()) {
-						contest_started_lb.putCompanyContestGamesIn(contestData.getCompanyName(), contestData.getContestID(), gameId);
+					String leader_board_name = "company_"+contestData.getCompanyName()+"_contests"; 
+					CompanyLeaderboard contest_started_lb = new CompanyLeaderboard(leader_board_name);	
+					if(contest_started_lb.getMembers().contains(contestData.getContestID())){
+						
+						node.put("status", "failure");
+						node.put("message", "Contest with the niven name already exists");
+						
+					}else {
+						contest_started_lb.putCompanyContestsIn(contestData.getCompanyName(), contestData.getContestID());
+						
+						for (LocationsAndDepartments location_department : contestData.getLocationsAndDepartments()) { 			             
+							String locationId = location_department.getLocation();
+							contest_started_lb.putCompanyContestLocationsIn(contestData.getCompanyName(), contestData.getContestID(), locationId);
+							for(String departmentId: location_department.getDepartment()) {							
+								contest_started_lb.putCompanyContestDepartmentsIn(contestData.getCompanyName(), contestData.getContestID(), departmentId);
+								contest_started_lb.putCompanyContestLocationDepartmentsIn(contestData.getCompanyName(), contestData.getContestID(), locationId, departmentId);
+							}																		
+				        } 
+						
+						for(String gameId: contestData.getGamesAllowed()) {
+							contest_started_lb.putCompanyContestGamesIn(contestData.getCompanyName(), contestData.getContestID(), gameId);
+						}
+						node.put("status", "success");
+						node.put("message", "Contest leaderboard created and started successfully");
+						
 					}
+					
 			
-					/*
-					for(int i=0;i<contestData.getLocationsAndDepartments().size();i++) {
-						String locationId = contestData.getLocationsAndDepartments().get(i).getLocation();
-						contest_started_lb.putCompanyContestLocationsIn(contestData.getCompanyName(), contestData.getContestID(), locationId);
-						for(int j=0;j<contestData.getLocationsAndDepartments().get(i).getDepartment().size();i++) {
-							String departmentId = contestData.getLocationsAndDepartments().get(i).getDepartment().get(j);							
-							contest_started_lb.putCompanyContestDepartmentsIn(contestData.getCompanyName(), contestData.getContestID(), departmentId);
-							contest_started_lb.putCompanyContestLocationDepartmentsIn(contestData.getCompanyName(), contestData.getContestID(), locationId, departmentId);							
-						}						
-					}
-					
-					for(int i=0;i<contestData.getGamesAllowed().size();i++) {
-						String gameId = contestData.getGamesAllowed().get(i);
-						contest_started_lb.putCompanyContestGamesIn(contestData.getCompanyName(), contestData.getContestID(), gameId);						
-					}
-					*/					
 					
 					break;
 								
 				case "CONTINUING" :
 					
 					updateScore(contestData);
+					
+					node.put("status", "success");
+					node.put("message", "Score updated successfully");
 					
 					break;
 				case "CONTINUING_bak" :

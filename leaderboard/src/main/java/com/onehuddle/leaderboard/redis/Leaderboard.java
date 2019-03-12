@@ -14,6 +14,15 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.onehuddle.commons.contest.pojo.ContestLB;
+import com.onehuddle.commons.contest.pojo.DashboardData;
+import com.onehuddle.commons.contest.pojo.DepartmentLB;
+import com.onehuddle.commons.contest.pojo.GameLB;
+import com.onehuddle.commons.contest.pojo.LB;
+import com.onehuddle.commons.contest.pojo.LocationLB;
 import com.onehuddle.commons.pojo.LeaderData;
 
 import redis.clients.jedis.Jedis;
@@ -151,6 +160,42 @@ public class Leaderboard {
 	public long totalMembersIn(String leaderboardName) {
 		return _jedis.zcard(leaderboardName);
 	}
+	
+	
+	
+	/**
+	 * Retrieve list of games in the named company and contest
+	 *
+	 * @param CompanyId CompanyId
+	 * @param ContestId contestId
+	 * @return list of games in the named company and contest
+	 */
+	
+	public List<String> getMembersIn(String key) {
+		
+		Set<String> members = _jedis.smembers(key);
+		return new ArrayList<String>(members);
+		//String[] membersArray =  members.stream().toArray(String[]::new);
+		//return membersArray;
+	}
+	
+	
+	/**
+	 * Retrieve list of games in the named company and contest
+	 *
+	 * @param CompanyId CompanyId
+	 * @param ContestId contestId
+	 * @return list of games in the named company and contest
+	 */
+	
+	public List<String> getMembers() {
+		
+		Set<String> members = _jedis.smembers(_leaderboardName);
+		return new ArrayList<String>(members);
+		//String[] membersArray =  members.stream().toArray(String[]::new);
+		//return membersArray;
+	}
+	
 
 	/**
 	 * Return the total # of pages in the current leaderboard
@@ -272,46 +317,9 @@ public class Leaderboard {
 	
 	
 	
-	/**
-	 * Change the score for a member by a certain delta in the named leaderboard
-	 *
-	 * @param leaderboardName Leaderboard
-	 * @param member Member
-	 * @param delta Score delta
-	 * @return Updated score
-	 */
-	public List<Object> updateContestScoreForMemberIn(String companyId, String contestId, String locationId, String departmentId, String gameId, String member, double delta) {
-		
-		Transaction transaction = _jedis.multi();
-		
-		String leader_board = "company_"+companyId+"_contest_"+contestId+"_leaderboard";		
-		transaction.zincrby(leader_board, delta, member);
-		
-		leader_board = "company"+companyId+"_contest_"+contestId+"_game_"+gameId+"_leaderboard";		
-		transaction.zincrby(leader_board, delta, member);
-		
-		leader_board = "company"+companyId+"_contest_"+contestId+"_location_"+locationId+"_leaderboard";		
-		transaction.zincrby(leader_board, delta, member);
-		
-		leader_board = "company"+companyId+"_contest_"+contestId+"_location_"+locationId+"_game_"+gameId+"_leaderboard";		
-		transaction.zincrby(leader_board, delta, member);
-		
-		leader_board = "company"+companyId+"_contest_"+contestId+"_location_"+locationId+"_department_"+departmentId+"_leaderboard";		
-		transaction.zincrby(leader_board, delta, member);
-		
-		leader_board = "company"+companyId+"_contest_"+contestId+"_location_"+locationId+"_department_"+departmentId+"_game_"+gameId+"_leaderboard";		
-		transaction.zincrby(leader_board, delta, member);
-		
-		leader_board = "company"+companyId+"_contest_"+contestId+"_department_"+departmentId+"_leaderboard";		
-		transaction.zincrby(leader_board, delta, member);
-		
-		leader_board = "company"+companyId+"_contest_"+contestId+"_department_"+departmentId+"_game_"+gameId+"_leaderboard";		
-		transaction.zincrby(leader_board, delta, member);
-		
-		
-		return transaction.exec();
-		
-	}
+	
+	
+	
 	
 	
 	
@@ -446,6 +454,12 @@ public class Leaderboard {
 	public List<LeaderData> leadersIn(int currentPage, boolean useZeroIndexForRank) {
 		return leadersIn(_leaderboardName, currentPage, useZeroIndexForRank, _pageSize);
 	}
+	
+	
+	public List<LB> contestLeadersIn(int currentPage, boolean useZeroIndexForRank) {
+		return contestLeadersIn(_leaderboardName, currentPage, useZeroIndexForRank, _pageSize);
+	}
+
 
 	
 	/**
@@ -484,6 +498,30 @@ public class Leaderboard {
 		int endingOffset = (startingOffset + pageSize) - 1;
 		Set<Tuple> rawLeaderData = _jedis.zrevrangeWithScores(leaderboardName, startingOffset, endingOffset);
 		return massageLeaderData(leaderboardName, rawLeaderData, useZeroIndexForRank);
+	}
+	
+	
+	
+	/**
+	 * Retrieve a page of leaders as a list of LeaderData in the named leaderboard
+	 *
+	 * @param leaderboardName Leaderboard
+	 * @param currentPage Page
+	 * @param useZeroIndexForRank Use zero-based index for rank
+	 * @param pageSize Page size
+	 * @return Page of leaders as a list of LeaderData in the named leaderboard
+	 */
+	public List<LB> contestLeadersIn(String leaderboardName, int currentPage, boolean useZeroIndexForRank, int pageSize) {
+	
+		currentPage = (currentPage < 1) ? 1 : currentPage;		
+		pageSize = (pageSize < 1) ? DEFAULT_PAGE_SIZE : pageSize;		
+		currentPage = (currentPage > totalPagesIn(leaderboardName, pageSize)) ? totalPagesIn(leaderboardName, pageSize) : currentPage;
+		int indexForRedis = currentPage - 1;
+		int startingOffset = indexForRedis * pageSize;
+		startingOffset = (startingOffset < 0) ? 0 : startingOffset;			
+		int endingOffset = (startingOffset + pageSize) - 1;
+		Set<Tuple> rawLeaderData = _jedis.zrevrangeWithScores(leaderboardName, startingOffset, endingOffset);
+		return getLbData(leaderboardName, rawLeaderData, useZeroIndexForRank);
 	}
 	
 	
@@ -597,6 +635,29 @@ public class Leaderboard {
 			Tuple memberDataTuple = memberDataIterator.next();
 			LeaderData leaderDataItem = new LeaderData(memberDataTuple.getElement(), memberDataTuple.getScore(), rankForIn(leaderboardName, memberDataTuple.getElement(), useZeroIndexForRank));
 			leaderData.add(leaderDataItem);
+		}
+
+		return leaderData;
+	}
+	
+	
+	/**
+	 * Massage the leaderboard data into LeaderData objects
+	 *
+	 * @param leaderboardName Leaderboard
+	 * @param memberData Tuple of member and score
+	 * @param useZeroIndexForRank Use zero-based index for rank
+	 * @return List of LeaderData objects which contains member, score and rank
+	 */
+	protected List<LB> getLbData(String leaderboardName, Set<Tuple> memberData, boolean useZeroIndexForRank) {
+		List<LB> leaderData = new ArrayList<LB>();
+
+		Iterator<Tuple> memberDataIterator = memberData.iterator();
+		while (memberDataIterator.hasNext()) {
+			Tuple memberDataTuple = memberDataIterator.next();
+			//LeaderData leaderDataItem = new LeaderData(memberDataTuple.getElement(), memberDataTuple.getScore(), rankForIn(leaderboardName, memberDataTuple.getElement(), useZeroIndexForRank));
+			LB lb = new LB(memberDataTuple.getElement(), memberDataTuple.getScore(), rankForIn(leaderboardName, memberDataTuple.getElement(), useZeroIndexForRank));						
+			leaderData.add(lb);
 		}
 
 		return leaderData;

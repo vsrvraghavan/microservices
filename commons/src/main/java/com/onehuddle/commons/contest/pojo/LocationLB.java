@@ -4,15 +4,15 @@ import java.util.*;
 
 public class LocationLB {
     private String locationID;
-    private List<LB> lbLOC;
+    private List<LB> lb;
     private List<GameLB> gameLB;
     private List<DepartmentLB> departmentLB;
 
     public String getLocationID() { return locationID; }
     public void setLocationID(String value) { this.locationID = value; }
 
-    public List<LB> getLBLOC() { return lbLOC; }
-    public void setLBLOC(List<LB> value) { this.lbLOC = value; }
+    public List<LB> getLB() { return lb; }
+    public void setLB(List<LB> value) { this.lb = value; }
 
     public List<GameLB> getGameLB() { return gameLB; }
     public void setGameLB(List<GameLB> value) { this.gameLB = value; }

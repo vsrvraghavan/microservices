@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+  <head>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+      <title>Spring Boot WebSocket Application</title>
+
+      <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+      <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" />
+      
+	  <link rel="stylesheet" href="css/panel.css" />
+
+	<!-- jQuery library -->
+	  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	  
+	  <script src="http://cdnjs.cloudflare.com/ajax/libs/popper.js/1.13.0/umd/popper.min.js"></script>
+
+	<!-- Latest compiled JavaScript -->
+	    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+      
+  </head>
+  <body>
+    <noscript>
+      <h2>Sorry! Your browser doesn't support Javascript</h2>
+    </noscript>
+
+    <div id="username-page">
+        <div class="username-page-container">
+            <h1 class="title">Type your username</h1>
+            <form id="usernameForm" name="usernameForm">
+                <div class="form-group">
+                    <input type="text" id="name" placeholder="Username" autocomplete="off" class="form-control" />
+                    <input type="text" id="companyname" placeholder="companyname" autocomplete="off" class="form-control" />
+                    <input type="text" id="contestname" placeholder="contestname" autocomplete="off" class="form-control" />                    
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="accent username-submit">Signin</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+     <div id="chat-page" class="hidden">
+	   <div class="container">
+	   <div><h1 style="text-align: center; font-size: x-large; font-weight: 900;">Swanspeed leaderboard</h1></div>	    
+		    <div class="row" id="contentPanel">
+	
+	  		</div>				
+	    </div>               
+    </div>    
+    
+
+    <script src="js/sockjs.min.js"></script>
+    <script src="js/stomp.min.js"></script>
+    <script src="js/contest_leaderboard.js"></script>
+  </body>
+</html>

@@ -14,20 +14,27 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.onehuddle.commons.contest.pojo.*;
 import com.onehuddle.commons.pojo.*;
 import com.onehuddle.commons.pojo.AdminPanelMessage.AdminPanelMessageType;
+import com.onehuddle.websocket.utils.Httputil;
+
 
 @SpringBootApplication
 @RestController
 @EnableAutoConfiguration
 @Controller
+@CrossOrigin(origins = {"*"},
+maxAge = 4800, allowCredentials = "false")
 public class Main {
 	@Autowired
 	private SimpMessagingTemplate webSocket;
@@ -42,6 +49,9 @@ public class Main {
 	private static List<LeaderData> game_3_data = null;
 	private static List<LeaderData> game_4_data = null;
 	
+	
+	
+	
 	public static void main(String[] args) {
 		SpringApplication.run(Main.class, args);
 	}
@@ -54,6 +64,23 @@ public class Main {
 		//this.webSocket.convertAndSend("/app/chat.sendMessage/"+ companyId, setAdminPanelMessage(data));
 		
 		this.webSocket.convertAndSend("/channel/public/"+ companyId, setAdminPanelMessage(data));
+		
+		return String.valueOf("posted");
+		
+    }
+	
+	
+	
+	@RequestMapping(value="/adminpanel/{companyId}/{contestId}", method = RequestMethod.POST)
+    public String pushPanelData(@PathVariable String companyId,  @PathVariable String contestId, @RequestBody ContestLeaderboardMessage data) {
+
+		System.out.println("In adminpanel POST");
+		System.out.println(data);		
+		//this.webSocket.convertAndSend("/app/chat.sendMessage/"+ companyId, setAdminPanelMessage(data));
+		
+		//this.webSocket.convertAndSend("/channel/public/"+ companyId+"/", setAdminPanelMessage(data));
+				
+		this.webSocket.convertAndSend("/channel/public/"+ companyId+"/"+contestId, data);
 		
 		return String.valueOf("posted");
 		
@@ -138,6 +165,17 @@ public class Main {
 		
 		data.setContent(messageData);
 		return data;
+		
+    }
+	
+	
+	
+	@RequestMapping(value="/getcontestdashoard", method = RequestMethod.GET)
+    public ObjectNode getContestDashboardData(@RequestParam(value = "companyid",required=true) String companyId, @RequestParam(value = "contestid", required=true)  String contestId) {
+		
+		Httputil httputil = new Httputil();
+		
+		return httputil.getContestDasboardData(companyId, contestId);
 		
     }
 	
