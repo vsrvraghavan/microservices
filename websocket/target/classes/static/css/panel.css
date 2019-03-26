@@ -17,12 +17,16 @@ body {
     font-size: 1rem;
     line-height: 1.58;
     color: #333;
-    background-color: #128ff2;
+	background-color: #7ea2bf;
     height: 100%;
 }
 
 
+.float-right-button{
 
+    padding-right: 9px;
+
+}
 .clearfix:after {
     display: block;
     content: "";
@@ -97,6 +101,13 @@ button.accent {
 
 #username-page {
     text-align: center;
+}
+
+
+.panelCard{
+	min-height:250px;
+	border-radius: .95rem;
+	background-color: #00c9d3;	
 }
 
 .username-page-container {
@@ -255,13 +266,39 @@ button.accent {
 
 .player_container {    
     display: flex;
+    background-color: #ffc1079e;
+    margin-bottom: 1px;
 }
 .player_container > div {
   text-align: left;
   flex: 1; /*grow*/
+  max-width: 70%;
 }
 
+.text-on-pannel {
+  background: #fff none repeat scroll 0 0;
+  height: auto;
+  margin-left: 20px;
+  padding: 3px 5px;
+  position: absolute;
+  margin-top: -47px;
+  border: 1px solid #337ab7;
+  border-radius: 8px;
+}
 
+.panel {
+  /* for text on pannel */
+  margin-top: 27px !important;
+}
+
+.panel-body {
+  padding-top: 30px !important;
+  border: 2px solid black;
+  border-radius: .95rem;
+  margin-bottom: 50px;
+  padding-left: 30px;
+  
+}
 
 .row {margin-bottom:50px;}
 
