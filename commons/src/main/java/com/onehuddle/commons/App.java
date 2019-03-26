@@ -2,8 +2,8 @@ package com.onehuddle.commons;
 
 import java.util.LinkedHashMap;
 
-import com.onehuddle.commons.utils.KiteConnectUtil;
-import com.onehuddle.commons.utils.Nse;
+//import com.onehuddle.commons.utils.KiteConnectUtil;
+//import com.onehuddle.commons.utils.Nse;
 
 
 /**
@@ -18,7 +18,7 @@ public class App
     {
         
     	
-    		new KiteConnectUtil();
+    		//new KiteConnectUtil();
     	   
     		/*
     		Nse nse = new Nse();
