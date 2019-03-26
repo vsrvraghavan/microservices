@@ -227,7 +227,7 @@ function getPanelData(){
 	   }
 	  }
 	 //var url ='http://localhost:9000/getpaneldata';
-	 var url ='http://localhost:9000/getcontestdashoard?companyid='+companyname+'&contestid='+contestname;
+	 var url ='http://www.swan-speed.com:9000/getcontestdashoard?companyid='+companyname+'&contestid='+contestname;
 	 
 	 xmlhttp.open('GET',url,true);
      xmlhttp.send(null);     
