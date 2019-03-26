@@ -32,7 +32,7 @@ import redis.clients.jedis.Tuple;
 public class Leaderboard {
 
 	public static final String VERSION = "2.0.2";
-	public static final int DEFAULT_PAGE_SIZE = 25;
+	public static final int DEFAULT_PAGE_SIZE = 3;
 	public static  String DEFAULT_REDIS_HOST = "localhost";
 	public static  int DEFAULT_REDIS_PORT = 6379;
   	public static final List<LeaderData> EMPTY_LEADER_DATA = Collections.emptyList();
