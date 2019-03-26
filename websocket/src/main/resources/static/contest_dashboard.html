@@ -28,9 +28,9 @@
             <h1 class="title">Type your username</h1>
             <form id="usernameForm" name="usernameForm">
                 <div class="form-group">
-                    <input type="text" id="name" placeholder="Username" autocomplete="off" class="form-control" />
-                    <input type="text" id="companyname" placeholder="companyname" autocomplete="off" class="form-control" />
-                    <input type="text" id="contestname" placeholder="contestname" autocomplete="off" class="form-control" />                    
+                    <input type="text" id="name" placeholder="Username" value="raga" autocomplete="off" class="form-control" />
+                    <input type="text" id="companyname" placeholder="companyname" value="Swanspeed" autocomplete="off" class="form-control" />
+                    <input type="text" id="contestname" placeholder="contestname" value="Contest-01" autocomplete="off" class="form-control" />                    
                 </div>
                 <div class="form-group">
                     <button type="submit" class="accent username-submit">Signin</button>
@@ -40,12 +40,36 @@
     </div>
 
      <div id="chat-page" class="hidden">
+       <div><h1 style="text-align: center; font-size: x-large; font-weight: 900;">Swanspeed leaderboard</h1></div>	    
 	   <div class="container">
-	   <div><h1 style="text-align: center; font-size: x-large; font-weight: 900;">Swanspeed leaderboard</h1></div>	    
-		    <div class="row" id="contentPanel">
+	   <div class="panel panel-primary">
+		   
+				<div class="panel-body">
+				  <h3 class="text-on-pannel text-primary"><strong class="text-uppercase"> Contest - Leaderboard </strong></h3>
+						<p>
+						<div class="row" id="contest_Panel">
 	
-	  		</div>				
-	    </div>               
+						</div>				
+						</p>
+				</div>
+				<div class="panel-body">
+				  <h3 class="text-on-pannel text-primary"><strong class="text-uppercase"> Location - Leaderboard </strong></h3>
+						<p>
+						<div class="row" id="location_contest_Panel">
+	
+						</div>				
+						</p>
+				</div>
+				<div class="panel-body">
+				  <h3 class="text-on-pannel text-primary"><strong class="text-uppercase"> Department - Leaderboard </strong></h3>
+						<p>
+						<div class="row" id="department_contest_Panel">
+	
+						</div>				
+						</p>
+				</div>
+			</div> 
+		</div>              
     </div>    
     
 

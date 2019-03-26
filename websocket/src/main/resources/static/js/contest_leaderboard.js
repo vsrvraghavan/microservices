@@ -43,13 +43,13 @@ var cardCount = 0;
 
 
 
-function addCard(lb_id, lb_name, lb_data){
+function addCard(lb_id, lb_name, lb_data, panel_id){
 	
 	cardCount = cardCount+1;		
     var myCol = $('<div class="col-sm-3 col-md-3 pb-2"></div>');
-    var myPanel = $('<div class="card card-outline-info" id="'+lb_id+'"><div class="card-block"><div class="card-title"><span>'+lb_name+'</span><button type="button" class="close" data-target="#'+lb_id+'" data-dismiss="alert"><span class="float-right"><i class="fa fa-remove"></i></span></button></div><p>   ' +lb_data + ' </p></div></div>');
+    var myPanel = $('<div class="card card-outline-info panelCard" id="'+lb_id+'"><div class="card-block" style="margin-left:2px"><div class="card-title"><span>'+lb_name+'</span><button type="button" class="close" data-target="#'+lb_id+'" data-dismiss="alert"><span class="float-right float-right-button"><i class="fa fa-remove"></i></span></button></div><p>   ' +lb_data + ' </p></div></div>');
     myPanel.appendTo(myCol);
-    myCol.appendTo('#contentPanel');
+    myCol.appendTo(panel_id);
     
 	$('.close').on('click', function(e){
 	  e.stopPropagation();  
@@ -71,7 +71,7 @@ function connect(event) {
         usernamePage.classList.add('hidden');
         chatPage.classList.remove('hidden');
         /////company_panel_label.innerHTML += " "+companyname;
-        var socket = new SockJS('/ws');
+        var socket = new SockJS('http://34.218.108.31:9000/ws');
         stompClient = Stomp.over(socket);
 
         stompClient.connect({}, onConnected, onError);
@@ -89,8 +89,7 @@ function onConnected() {
         {},
         JSON.stringify({sender: username, type: 'JOIN'})
     )
-    getPanelData();
-
+	getPanelData();
     //connectingElement.classList.add('hidden');
 }
 
@@ -156,7 +155,7 @@ function setPanelCard(messageContent){
 		var lb_id ="contest_"+contest_name+"_lb";
 		scoreboardElement.innerHTML = '<div class="card-block"><div class="card-title"><span>Contest : '+contest_name+'</span><button type="button" class="close" data-target="#'+lb_id+'" data-dismiss="alert"><span class="float-right"><i class="fa fa-remove"></i></span></button></div><p>   ' +playerRankData + ' </p></div>';
 	}else{		
-		addCard("contest_"+contest_name+"_lb" , "Contest : "+contest_name , playerRankData);
+		addCard("contest_"+contest_name+"_lb" , "Contest : "+contest_name , playerRankData, '#contest_Panel');
 	}
 		
 	
@@ -180,7 +179,7 @@ function setPanelCard(messageContent){
 				
 				gamescoreboardElement.innerHTML = '<div class="card-block"><div class="card-title"><span>Game : '+game_name+'</span><button type="button" class="close" data-target="#'+lb_id+'" data-dismiss="alert"><span class="float-right"><i class="fa fa-remove"></i></span></button></div><p>   ' +playerRankData + ' </p></div>';
 			}else{		
-				addCard(lb_id , "Game : "+game_name , playerRankData);				
+				addCard(lb_id , "Game : "+game_name , playerRankData, '#contest_Panel');				
 			}
 			playerRankData = "";
 			
@@ -189,23 +188,63 @@ function setPanelCard(messageContent){
 	}
 	
 	
-	var department_lb = contest_data.departmentLB;
-	
-	for(var lb in department_lb){
-		var department_name = lb.departmentID;
+	var department_lb_data = contest_data.departmentLB;
+	console.log("department_lb "+ JSON.stringify(department_lb_data));
+	for(var department_lb in department_lb_data){
+		
+		var department_name = department_lb_data[department_lb].departmentID;	
+		console.log("department_name : "+ department_name);	
+		var contest_department_lb = department_lb_data[department_lb].lb;
+		console.log("contest_department_lb : "+ JSON.stringify(contest_department_lb));
+
+		var playerRankData = ""; 
+		for(var data in contest_department_lb){
+			var name = contest_department_lb[data].name;
+			var score = contest_department_lb[data].score;		
+			playerRankData += "<div class=\"player_container\"><div>"+name+"</div><div>:</div><div>"+ score +"</div></div>";
+		}
+		
+		var scoreboardElement =  document.getElementById("contest_"+contest_name+"_department_"+department_name+"_lb");		 	
+		if (typeof(scoreboardElement) != 'undefined' && scoreboardElement != null){
+			var lb_id ="contest_"+contest_name+"_department_"+department_name+"_lb";
+			scoreboardElement.innerHTML = '<div class="card-block"><div class="card-title"><span>Department : '+department_name+'</span><button type="button" class="close" data-target="#'+lb_id+'" data-dismiss="alert"><span class="float-right"><i class="fa fa-remove"></i></span></button></div><p>   ' +playerRankData + ' </p></div>';
+		}else{		
+			addCard("contest_"+contest_name+"_department_"+department_name+"_lb" , "Department : "+department_name , playerRankData, '#department_contest_Panel');
+		}
+		
+		
 		//addCard(department_name);
 	}
-	
-	
-	var location_lb = contest_data.locationLB;
-	
-	for(var lb in location_lb){
-		var location_name = lb.locationID;
-		//addCard(location_name);
+	//curl -X POST --data '{"companyName":"Swanspeed","contestID":"101","contestStatus":"STARTED","gamesAllowed":["GAME1","GAME2"],"locationsAndDepartments":[{"location":"New York","department":["HR","ENG","ADMIN"]}]}' -H "Content-Type: application/json" http://34.218.108.31:8181/contestleaderBoard
+	//curl -X POST --data '{"companyName":"1Huddle","contestID":"101","contestStatus":"CONTINUING","playersAndPoints":[{"registeredPlayer":{"companyID":"1Huddle","gameID":"GAME1","locationID":"New York","departmentID":"HR","playerID":"ragha_AT_swanspeed.com"},"contestTicket":"Contest-101-1001","pointsEarned":10}]}' -H "Content-Type: application/json" http://34.218.108.31:8181/contestleaderBoard
+	//curl -X POST --data '{"companyName":"Swanspeed","contestID":"Contest-01","contestStatus":"CONTINUING","playersAndPoints":[{"registeredPlayer":{"companyID":"Swanspeed","gameID":"GAME2","locationID":"Pune","departmentID":"DEV","playerID":"ANDY_AT_Swanspeed.com"},"contestTicket":"Contest-101-1001","pointsEarned":30}]}' -H "Content-Type: application/json" http://34.218.108.31:8181/contestleaderBoard
+	var location_lb_data = contest_data.locationLB;
+		console.log("location_lb_data "+ JSON.stringify(location_lb_data));
+	for(var location_lb in location_lb_data){
+		console.log("Data : " + JSON.stringify(location_lb_data[location_lb]));
+		var location_name = location_lb_data[location_lb].locationID;	
+		console.log("location_name : "+ location_name);	
+		var contest_location_lb = location_lb_data[location_lb].lb;
+		console.log("contest_location_lb : "+ JSON.stringify(contest_location_lb));
+
+		var playerRankData = ""; 
+		for(var data in contest_location_lb){
+			var name = contest_location_lb[data].name;
+			var score = contest_location_lb[data].score;		
+			playerRankData += "<div class=\"player_container\"><div>"+name+"</div><div>:</div><div>"+ score +"</div></div>";
+		}
+		var lb_id ="contest_"+contest_name+"_location_"+location_name+"_lb";
+		var scoreboardElement =  document.getElementById(lb_id);		 	
+		if (typeof(scoreboardElement) != 'undefined' && scoreboardElement != null){			
+			scoreboardElement.innerHTML = '<div class="card-block"><div class="card-title"><span>Location : '+location_name+'</span><button type="button" class="close" data-target="#'+lb_id+'" data-dismiss="alert"><span class="float-right"><i class="fa fa-remove"></i></span></button></div><p>   ' +playerRankData + ' </p></div>';
+		}else{		
+			addCard(lb_id , "Location : "+location_name , playerRankData, '#location_contest_Panel');
+		}
 	}
 	
 	
 }
+
 
 
 
