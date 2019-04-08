@@ -47,7 +47,8 @@ function addCard(lb_id, lb_name, lb_data, panel_id){
 	
 	cardCount = cardCount+1;		
     var myCol = $('<div class="col-sm-3 col-md-3 pb-2"></div>');
-    var myPanel = $('<div class="card card-outline-info panelCard" id="'+lb_id+'"><div class="card-block" style="margin-left:2px"><div class="card-title"><span>'+lb_name+'</span><button type="button" class="close" data-target="#'+lb_id+'" data-dismiss="alert"><span class="float-right float-right-button"><i class="fa fa-remove"></i></span></button></div><p>   ' +lb_data + ' </p></div></div>');
+    var myPanel = $('<div class="card card-outline-info panelCard" id="'+lb_id+'"><div class="card-block" style="margin-left:2px"><div class="card-title"><span>'+lb_name+'</span><button type="button" class="close close_btn" data-target="#'+lb_id+'" data-dismiss="alert"><span class="float-right float-right-button"><i class="fa"></i></span></button></div><p>   ' +lb_data + ' </p></div></div>');
+    //    var myPanel = $('<div class="card card-outline-info panelCard" id="'+lb_id+'"><div class="card-block" style="margin-left:2px"><div class="card-title"><span>'+lb_name+'</span><button type="button" class="close" data-target="#'+lb_id+'" data-dismiss="alert"><span class="float-right float-right-button"><i class="fa fa-remove"></i></span></button></div><p>   ' +lb_data + ' </p></div></div>');
     myPanel.appendTo(myCol);
     myCol.appendTo(panel_id);
     
@@ -71,7 +72,9 @@ function connect(event) {
         usernamePage.classList.add('hidden');
         chatPage.classList.remove('hidden');
         /////company_panel_label.innerHTML += " "+companyname;
-        var socket = new SockJS('http://34.218.108.31:9000/ws');
+//        var socket = new SockJS('http://localhost:9000/ws');
+//        var socket = new SockJS('http://localhost:9000/dashqrapi/ws');        
+        var socket = new SockJS('http://www.swan-speed.com:9000/ws');
         stompClient = Stomp.over(socket);
 
         stompClient.connect({}, onConnected, onError);
@@ -364,3 +367,5 @@ function getAvatarColor(messageSender) {
 
 usernameForm.addEventListener('submit', connect, true)
 //messageForm.addEventListener('submit', sendMessage, true)
+
+

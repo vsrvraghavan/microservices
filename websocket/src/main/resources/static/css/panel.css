@@ -12,8 +12,7 @@ html,body {
 body {
     margin: 0;
     padding: 0;
-    font-weight: 400;
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+
     font-size: 1rem;
     line-height: 1.58;
     color: #333;
@@ -21,6 +20,10 @@ body {
     height: 100%;
 }
 
+
+.close_btn {
+	margin-right: 10px;
+}
 
 .float-right-button{
 
@@ -108,6 +111,7 @@ button.accent {
 	min-height:250px;
 	border-radius: .95rem;
 	background-color: #00c9d3;	
+    border-radius: 5px 5px 5px 50px/25px 25px 25px 5px;
 }
 
 .username-page-container {
@@ -262,17 +266,19 @@ button.accent {
     		padding-bottom: 1px;
     		}
 
-.panel-body { text-align: center; font-size: large}
-
 .player_container {    
     display: flex;
     background-color: #ffc1079e;
     margin-bottom: 1px;
+	border-radius: 5px 5px 5px 50px/25px 25px 25px 5px;
+	border: 1px solid #333;
 }
 .player_container > div {
   text-align: left;
   flex: 1; /*grow*/
+  padding: 3px 5px;
   max-width: 70%;
+
 }
 
 .text-on-pannel {
@@ -284,6 +290,7 @@ button.accent {
   margin-top: -47px;
   border: 1px solid #337ab7;
   border-radius: 8px;
+  border-radius: 5px 5px 5px 5px/25px 25px 25px 5px;
 }
 
 .panel {
@@ -297,6 +304,8 @@ button.accent {
   border-radius: .95rem;
   margin-bottom: 50px;
   padding-left: 30px;
+  border-radius: 5px 5px 5px 5px/25px 25px 25px 5px;
+  text-align: center; font-size: large
   
 }
 
