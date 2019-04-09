@@ -273,6 +273,12 @@ public class LeaderBoard {
 		
 		switch(contestData.getContestStatus()) {
 				case "STARTED" :
+					try {
+						System.out.println("Contest Started Command - Payload : " + mapper.writeValueAsString(contestData));
+					} catch (JsonProcessingException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 					String leader_board_name = "company_"+contestData.getCompanyName()+"_contests"; 
 					CompanyLeaderboard contest_started_lb = new CompanyLeaderboard(leader_board_name);	
 					if(contest_started_lb.getMembers().contains(contestData.getContestID())){

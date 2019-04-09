@@ -4,7 +4,7 @@
 package com.onehuddle.websocket.controller;
 
 import com.google.gson.Gson;
-import com.onehuddle.commons.contest.pojo.*;
+//import com.onehuddle.commons.contest.pojo.*;
 import com.onehuddle.commons.pojo.ContestLeaderboardMessage;
 import com.onehuddle.websocket.model.ChatMessage;
 

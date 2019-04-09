@@ -25,7 +25,7 @@ public class Main {
     public static void main(String[] args) throws Exception {    	
     		Object[] sources = {Main.class, LeaderBoard.class};
     		ApplicationContext applicationContext =  SpringApplication.run(sources, args);        
-        Leaderboard.DEFAULT_REDIS_HOST = args[0];
+    		Leaderboard.DEFAULT_REDIS_HOST = args[0];
         	Leaderboard.DEFAULT_REDIS_PORT = Integer.valueOf(args[1]);
         	System.out.println("Redis Host : " + Leaderboard.DEFAULT_REDIS_HOST + ":" + Leaderboard.DEFAULT_REDIS_PORT);
         	

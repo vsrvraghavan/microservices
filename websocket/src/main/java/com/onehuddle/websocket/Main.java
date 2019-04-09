@@ -23,8 +23,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.onehuddle.commons.contest.pojo.*;
-import com.onehuddle.commons.pojo.*;
+import com.onehuddle.commons.pojo.AdminPanelMessage;
+import com.onehuddle.commons.pojo.LeaderData;
+import com.onehuddle.commons.pojo.AdminPanelMessageData;
+import com.onehuddle.commons.pojo.ContestLeaderboardMessage;
 import com.onehuddle.commons.pojo.AdminPanelMessage.AdminPanelMessageType;
 import com.onehuddle.websocket.utils.Httputil;
 
@@ -56,6 +58,8 @@ public class Main {
 		SpringApplication.run(Main.class, args);
 	}
 	
+	/*
+	
 	@RequestMapping(value="/adminpanel/{companyId}", method = RequestMethod.POST)
     public String pushPanelData(@PathVariable String companyId,  @RequestBody AdminPanelMessage data) {
 
@@ -69,7 +73,7 @@ public class Main {
 		
     }
 	
-	
+	*/
 	
 	@RequestMapping(value="/adminpanel/{companyId}/{contestId}", method = RequestMethod.POST)
     public String pushPanelData(@PathVariable String companyId,  @PathVariable String contestId, @RequestBody ContestLeaderboardMessage data) {
@@ -87,7 +91,7 @@ public class Main {
     }
 	
 	
-	
+	/*
 	private AdminPanelMessage setAdminPanelMessage(AdminPanelMessage data) {
 		
 
@@ -142,6 +146,8 @@ public class Main {
 		
 		return data;
 	}
+	
+	*/
 		
 	@RequestMapping(value="/getpaneldata", method = RequestMethod.GET)
     public AdminPanelMessage getPanelData() {

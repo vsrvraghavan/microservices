@@ -4,7 +4,8 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
       <title>Spring Boot WebSocket Application</title>
 
-      <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+<!--      <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">-->
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/4.3.1/sketchy/bootstrap.min.css">
       <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" />
       
 	  <link rel="stylesheet" href="css/panel.css" />
@@ -16,6 +17,7 @@
 
 	<!-- Latest compiled JavaScript -->
 	    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+	    
       
   </head>
   <body>
@@ -33,7 +35,8 @@
                     <input type="text" id="contestname" placeholder="contestname" value="Contest-01" autocomplete="off" class="form-control" />                    
                 </div>
                 <div class="form-group">
-                    <button type="submit" class="accent username-submit">Signin</button>
+                    <button type="submit" class="btn btn-lg btn-success">Signin</button>
+                    <button type="submit" class="btn btn-lg btn-danger">Cancel</button>
                 </div>
             </form>
         </div>
@@ -52,7 +55,7 @@
 						</div>				
 						</p>
 				</div>
-				<div class="panel-body">
+				<div class="panel-body border-danger">
 				  <h3 class="text-on-pannel text-primary"><strong class="text-uppercase"> Location - Leaderboard </strong></h3>
 						<p>
 						<div class="row" id="location_contest_Panel">
