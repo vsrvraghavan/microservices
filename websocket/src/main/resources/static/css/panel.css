@@ -303,7 +303,8 @@ button.accent {
   border: 2px solid black;
   border-radius: .95rem;
   margin-bottom: 50px;
-  padding-left: 30px;
+  padding-left: 15px;
+  padding-right: 15px;
   border-radius: 5px 5px 5px 5px/25px 25px 25px 5px;
   text-align: center; font-size: large
   

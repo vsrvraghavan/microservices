@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+	<head>
+ 
+		<title>MCQ Quiz Sample</title>
+
+		<meta name=viewport content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<!--		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css"> -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/4.3.1/sketchy/bootstrap.min.css">
+
+		<!-- jQuery library -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+		<!-- Latest compiled JavaScript -->
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+		<link href="main.css"rel="stylesheet"type="text/css"/>
+		<script src="jquery.js"></script>
+		<script src="controller.js"></script>
+	</head>
+	<body >
+		<h1 align="center"> 1Huddle </h1>
+		<div id="loginContainer" align="center">
+
+			<form class="form-horizontal" onsubmit="return false">
+			<fieldset>
+
+			<!-- Form Name -->
+			<div id="topbar">Login</div>
+			<div class="spacer"></div>
+
+			<!-- Text input-->
+			<div class="form-group">
+			  <label class="col-md-4 control-label" for="userId">Username</label>  
+			  <div class="col-md-5">
+			  <input id="userId" name="userId" type="text" placeholder="Username" class="form-control input-md">
+	
+			  </div>
+			</div>
+
+			<!-- Text input-->
+			<div class="form-group">
+			  <label class="col-md-4 control-label" for="companyId">Company</label>  
+			  <div class="col-md-5">
+			  <input id="companyId" name="companyId" type="text" placeholder="Company" class="form-control input-md">
+	
+			  </div>
+			</div>
+			
+			<!-- Text input-->
+			<div class="form-group">
+			  <label class="col-md-4 control-label" for="locationId">Location</label>  
+			  <div class="col-md-5">
+			  <input id="locationId" name="locationId" type="text" placeholder="Location" class="form-control input-md">
+	
+			  </div>
+			</div>
+
+			<!-- Text input-->
+			<div class="form-group">
+			  <label class="col-md-4 control-label" for="departmentId">Department</label>  
+			  <div class="col-md-5">
+			  <input id="departmentId" name="departmentId" type="text" placeholder="Department" class="form-control input-md">
+	
+			  </div>
+			</div>
+
+			<!-- Button (Double) -->
+			<div class="form-group">
+			  <label class="col-md-4 control-label" for="loginBtn"></label>
+			  <div class="col-md-8">
+				<button id="loginBtn" name="loginBtn" class="btn btn-info">Login</button>
+				<button id="cancelBtn" name="cancelBtn" class="btn btn-warning">Cancel</button>
+			  </div>
+			</div>
+
+			</fieldset>
+			</form>
+
+		</div>
+		<div id="startGameContainer" align="center"> 
+			<div id="topbar" name="startGameNameHeader" align="left">Join Contest</div>
+			<div class="spacer"></div>
+			<form class="form-horizontal" onsubmit="return false">
+				<fieldset>	
+					<!-- Text input-->
+					<div class="form-group">
+					  <label class="col-md-4 control-label" for="contestId">Contest</label>  
+					  <div class="col-md-5">
+					  <input id="contestId" name="contestId" type="text" placeholder="Contest" class="form-control input-md">
+	
+					  </div>
+					</div>
+			
+					<!-- Text input-->
+					<div class="form-group">
+					  <label class="col-md-4 control-label" for="gameId">Game</label>  
+					  <div class="col-md-5">
+					  <input id="gameId" name="gameId" type="text" placeholder="Game" class="form-control input-md">
+	
+					  </div>
+					</div>
+					<button id="startBtn" name="startBtn" class="btn btn-info btn-lg">Start</button>
+				</fieldset>
+			</form>
+		</div>
+		<div id="playGameContainer" align="center"> 
+			<div id="topbar" name="playGameNameHeader" align="left">Game1</div>
+			<div class="spacer"></div>
+			<form class="form-horizontal" onsubmit="return false">
+				<fieldset>		
+					<button id="playGameBtn" name="playGameBtn" class="btn btn-info btn-lg">Play</button>
+				</fieldset>
+			</form>
+		</div>
+		
+		<div id="QuizContainer"> 
+			<div id="topbar" name="quizGameNameHeader">Game1</div>
+			<div class="spacer"></div>
+			<div id="navContent">
+				<div id="game1"></div>
+				<div id="game2"></div>
+			</div>
+		</div> 
+
+	</body>
+</html>

@@ -31,8 +31,8 @@
             <form id="usernameForm" name="usernameForm">
                 <div class="form-group">
                     <input type="text" id="name" placeholder="Username" value="raga" autocomplete="off" class="form-control" />
-                    <input type="text" id="companyname" placeholder="companyname" value="Swanspeed" autocomplete="off" class="form-control" />
-                    <input type="text" id="contestname" placeholder="contestname" value="Contest-01" autocomplete="off" class="form-control" />                    
+                    <input type="text" id="companyname" placeholder="companyname" value="1Huddle" autocomplete="off" class="form-control" />
+                    <input type="text" id="contestname" placeholder="contestname" value="101" autocomplete="off" class="form-control" />                    
                 </div>
                 <div class="form-group">
                     <button type="submit" class="btn btn-lg btn-success">Signin</button>
@@ -49,6 +49,7 @@
 		   
 				<div class="panel-body">
 				  <h3 class="text-on-pannel text-primary"><strong class="text-uppercase"> Contest - Leaderboard </strong></h3>
+				  <u><div style="margin-top:0px;width:100%"><select id="contest_dropdown"><option value="0">---</option></select></div></u>
 						<p>
 						<div class="row" id="contest_Panel">
 	
@@ -56,7 +57,8 @@
 						</p>
 				</div>
 				<div class="panel-body border-danger">
-				  <h3 class="text-on-pannel text-primary"><strong class="text-uppercase"> Location - Leaderboard </strong></h3>
+				  <h3 class="text-on-pannel text-primary"><strong class="text-uppercase"> Location - Leaderboard </strong></h3>				  
+				  <u><div style="margin-top:0px;width:100%"><select id="location_dropdown"><option value="0">---</option></select></div></u>
 						<p>
 						<div class="row" id="location_contest_Panel">
 	
@@ -65,6 +67,7 @@
 				</div>
 				<div class="panel-body">
 				  <h3 class="text-on-pannel text-primary"><strong class="text-uppercase"> Department - Leaderboard </strong></h3>
+				  <u><div style="margin-top:0px;width:100%"><select id="department_dropdown"><option value="0">---</option></select></div></u>
 						<p>
 						<div class="row" id="department_contest_Panel">
 	
