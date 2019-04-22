@@ -17,7 +17,7 @@ import java.util.Map;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
+//import com.google.gson.Gson;
 import com.onehuddle.commons.contest.pojo.*;
 import com.onehuddle.commons.pojo.AdminPanelMessage;
 import com.onehuddle.commons.pojo.AdminPanelMessage.AdminPanelMessageType;
@@ -56,7 +56,7 @@ public class HttpUtils {
 			try {
 				System.out.println("in updateAdminPanel inside if condition ");
 				
-				Gson gson = new Gson();
+				//Gson gson = new Gson();
 				AdminPanelMessage apm = new AdminPanelMessage();
 				AdminPanelMessageData apmd = new AdminPanelMessageData();
 				String adminPanelServer = props.getProperty("admin_panel_server", "172.18.0.22");
@@ -88,7 +88,13 @@ public class HttpUtils {
 
 				
 				//String input1 = "{\"type\":\"DATA\",\"content\":{\"gameSessionsLaunched\":1,\"gameSessionsFinishedByPlayer\":2,\"gameSessionsFinishedByManager\":4,\"gameSessionsFinishedByTimeout\":3,\"lb1\":[{\"member\":\"Raga\",\"score\":1000.0,\"rank\":3,\"gameId\":\"GAME1\",\"department\":null,\"group\":null},{\"member\":\"Nirmalya\",\"score\":1003.0,\"rank\":2,\"gameId\":\"GAME1\",\"department\":null,\"group\":null},{\"member\":\"Andy\",\"score\":1010.0,\"rank\":1,\"gameId\":\"GAME1\",\"department\":null,\"group\":null}],\"lb2\":null},\"messageFor\":\"all\"}";//mapper.writeValueAsString(apm);
-				String input =  gson.toJson(apm);// mapper.writeValueAsString(apm);
+				
+				
+				
+				
+				//String input =  gson.toJson(apm);// mapper.writeValueAsString(apm);
+				
+				String input =   mapper.writeValueAsString(apm);
 				
 				
 				System.out.println("input  : " + input);
@@ -96,7 +102,10 @@ public class HttpUtils {
 				System.out.println("In adminpanel POST");
 				System.out.println(input);
 				
-				AdminPanelMessage apm1 = gson.fromJson(input, AdminPanelMessage.class);
+				//AdminPanelMessage apm1 = gson.fromJson(input, AdminPanelMessage.class);
+				
+				AdminPanelMessage apm1 = mapper.readValue(input, AdminPanelMessage.class);
+				
 				System.out.println(apm1.getMessageFor());
 				System.out.println(apm1.getType());
 				System.out.println(apm1.getMessageFor());
@@ -177,7 +186,7 @@ public class HttpUtils {
 			conn.setRequestMethod("POST");
 			conn.setRequestProperty("Content-Type", "application/json");
 
-			Gson gson = new Gson();
+			//Gson gson = new Gson();
 			//String input1 = "{\"type\":\"DATA\",\"content\":{\"gameSessionsLaunched\":1,\"gameSessionsFinishedByPlayer\":2,\"gameSessionsFinishedByManager\":4,\"gameSessionsFinishedByTimeout\":3,\"lb1\":[{\"member\":\"Raga\",\"score\":1000.0,\"rank\":3,\"gameId\":\"GAME1\",\"department\":null,\"group\":null},{\"member\":\"Nirmalya\",\"score\":1003.0,\"rank\":2,\"gameId\":\"GAME1\",\"department\":null,\"group\":null},{\"member\":\"Andy\",\"score\":1010.0,\"rank\":1,\"gameId\":\"GAME1\",\"department\":null,\"group\":null}],\"lb2\":null},\"messageFor\":\"all\"}";//mapper.writeValueAsString(apm);
 			
 			
@@ -351,7 +360,7 @@ public class HttpUtils {
 			conn.setRequestMethod("POST");
 			conn.setRequestProperty("Content-Type", "application/json");
 
-			Gson gson = new Gson();
+			//Gson gson = new Gson();
 			//String input1 = "{\"type\":\"DATA\",\"content\":{\"gameSessionsLaunched\":1,\"gameSessionsFinishedByPlayer\":2,\"gameSessionsFinishedByManager\":4,\"gameSessionsFinishedByTimeout\":3,\"lb1\":[{\"member\":\"Raga\",\"score\":1000.0,\"rank\":3,\"gameId\":\"GAME1\",\"department\":null,\"group\":null},{\"member\":\"Nirmalya\",\"score\":1003.0,\"rank\":2,\"gameId\":\"GAME1\",\"department\":null,\"group\":null},{\"member\":\"Andy\",\"score\":1010.0,\"rank\":1,\"gameId\":\"GAME1\",\"department\":null,\"group\":null}],\"lb2\":null},\"messageFor\":\"all\"}";//mapper.writeValueAsString(apm);
 			
 			
@@ -439,7 +448,7 @@ public class HttpUtils {
 				CompanyLeaderboard lb = new CompanyLeaderboard("company_"+gameData.getCompanyID()+"_game_"+gameData.getGameID()+"_leaderboard");                      
 		        List<LeaderData>  game_leaderlist = lb.leadersInGame(1, false, leader_list_limit, gameData.getGameID());
 				
-				Gson gson = new Gson();
+				//Gson gson = new Gson();
 				AdminPanelMessage apm = new AdminPanelMessage();
 				AdminPanelMessageData apmd = new AdminPanelMessageData();
 				String adminPanelServer = props.getProperty("admin_panel_server", "172.18.0.3");
@@ -538,7 +547,8 @@ public class HttpUtils {
 
 				
 				//String input1 = "{\"type\":\"DATA\",\"content\":{\"gameSessionsLaunched\":1,\"gameSessionsFinishedByPlayer\":2,\"gameSessionsFinishedByManager\":4,\"gameSessionsFinishedByTimeout\":3,\"lb1\":[{\"member\":\"Raga\",\"score\":1000.0,\"rank\":3,\"gameId\":\"GAME1\",\"department\":null,\"group\":null},{\"member\":\"Nirmalya\",\"score\":1003.0,\"rank\":2,\"gameId\":\"GAME1\",\"department\":null,\"group\":null},{\"member\":\"Andy\",\"score\":1010.0,\"rank\":1,\"gameId\":\"GAME1\",\"department\":null,\"group\":null}],\"lb2\":null},\"messageFor\":\"all\"}";//mapper.writeValueAsString(apm);
-				String input =  gson.toJson(apm);// mapper.writeValueAsString(apm);
+				//String input =  gson.toJson(apm);// mapper.writeValueAsString(apm);
+				String input =   mapper.writeValueAsString(apm);
 				
 				
 				System.out.println("input  : " + input);
@@ -546,7 +556,9 @@ public class HttpUtils {
 				System.out.println("In adminpanel POST");
 				System.out.println(input);
 				
-				AdminPanelMessage apm1 = gson.fromJson(input, AdminPanelMessage.class);
+				//AdminPanelMessage apm1 = gson.fromJson(input, AdminPanelMessage.class);
+				AdminPanelMessage apm1 = mapper.readValue(input, AdminPanelMessage.class);
+				
 				System.out.println(apm1.getMessageFor());
 				System.out.println(apm1.getType());
 				System.out.println(apm1.getMessageFor());

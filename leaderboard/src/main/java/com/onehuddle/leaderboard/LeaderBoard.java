@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.Hashtable;
 import java.util.List;
 
-import javax.ws.rs.QueryParam;
+//import javax.ws.rs.QueryParam;
 
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.HttpStatus;

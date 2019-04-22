@@ -8,5 +8,5 @@ ADD onehuddle.properties /etc/onehuddle.properties
 EXPOSE 8181
 ENV JAVA_OPTS=""
 #ENTRYPOINT ["java", "-Djava.security.egd=file:/dev/./urandom", "-Dserver.port=8181", "-jar","/app.jar", "172.31.42.216","6379"]
-ENTRYPOINT ["java", "-Djava.security.egd=file:/dev/./urandom", "-Dserver.port=8181", "-jar","/app.jar", "192.168.0.102","6379"]
+ENTRYPOINT ["java", "-Djava.security.egd=file:/dev/./urandom", "-Dserver.port=8181", "-jar","/app.jar", "192.168.0.104","6379"]
 LABEL maintainer "VSRV Raghavan"  

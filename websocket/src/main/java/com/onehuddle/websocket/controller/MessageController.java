@@ -3,7 +3,6 @@
  */
 package com.onehuddle.websocket.controller;
 
-import com.google.gson.Gson;
 //import com.onehuddle.commons.contest.pojo.*;
 import com.onehuddle.commons.pojo.ContestLeaderboardMessage;
 import com.onehuddle.websocket.model.ChatMessage;
@@ -27,8 +26,7 @@ public class MessageController {
     @SendTo("/channel/public/{companyId}")
     public ChatMessage sendMessage(@DestinationVariable String companyId, @Payload ChatMessage chatMessage) {
     		System.out.println("sendMessage Received Chat Message");
-    		Gson gson = new Gson();
-    		System.out.println(gson.toJson(chatMessage));    		
+	
         return chatMessage;
     }
     
@@ -37,8 +35,7 @@ public class MessageController {
     @SendTo("/channel/public/{companyId}/{ContestId}")
     public ContestLeaderboardMessage sendMessage(@DestinationVariable String companyId, @DestinationVariable String contestId, @Payload ContestLeaderboardMessage data) {
     		System.out.println("sendMessage Received Chat Message");
-    		Gson gson = new Gson();
-    		System.out.println(gson.toJson(data));    		
+ 		
         return data;
     }
 
