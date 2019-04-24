@@ -60,7 +60,7 @@ $(document).ready(function () {
 		gameId =	$("#gameId").val();	
 		console.log(userId + "  " + companyId + "  " + locationId + "  " + departmentId + "  " + contestId + "  "+ gameId)
 		var url = "http://"+contest_server_name+":"+contest_server_port+"/ticket";
-		var requestData = JSON.stringify({"sessionIDAtGateway":randomString(4),"companyName":companyId,"contestID":contestId,"fromLocation":departmentId,"fromDepartment":departmentId,"playerID":userId,"gameID":gameId});
+		var requestData = JSON.stringify({"sessionIDAtGateway":randomString(4),"companyName":companyId,"contestID":contestId,"fromLocation":locationId,"fromDepartment":departmentId,"playerID":userId,"gameID":gameId});
 		postData(url, requestData, processJoinContestGameResponse);			
 	});
 	
