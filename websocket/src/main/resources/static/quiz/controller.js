@@ -20,10 +20,10 @@ $(document).ready(function () {
 	var xhr = new XMLHttpRequest();
 
 
-	var contest_server_name = "localhost";
+	var contest_server_name = "34.218.108.31";
 	var contest_server_port = "9090";
 
-	var quiz_server_name = "localhost";	
+	var quiz_server_name = "34.218.108.31";	
 	var quiz_server_port = "8999";	
 
 	var randomString = function (length) {
