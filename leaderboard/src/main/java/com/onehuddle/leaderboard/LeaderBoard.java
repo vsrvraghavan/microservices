@@ -128,6 +128,7 @@ public class LeaderBoard {
 	
 	@RequestMapping(value="/leaderBoard", method = RequestMethod.PUT)
     public String setLeaderboard(@RequestBody GameScoreData gameData) { 
+		System.out.println("In PUT leaderBoard");
 		ObjectMapper mapper = new ObjectMapper();
 		
 		try {
@@ -163,6 +164,7 @@ public class LeaderBoard {
 	
 	@RequestMapping(value="/leaderBoard", method = RequestMethod.POST)
     public String updateLeaderboard(@RequestBody GameScoreData gameData) { 
+		System.out.println("In POST leaderBoard");
 		ObjectMapper mapper = new ObjectMapper();
 		
 		try {
