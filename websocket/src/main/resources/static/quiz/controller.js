@@ -20,10 +20,10 @@ $(document).ready(function () {
 	var xhr = new XMLHttpRequest();
 
 
-	var contest_server_name = "34.218.108.31";
+	var contest_server_name = "www.swan-speed.com";
 	var contest_server_port = "9090";
 
-	var quiz_server_name = "34.218.108.31";	
+	var quiz_server_name = "www.swan-speed.com";	
 	var quiz_server_port = "8999";	
 
 	var randomString = function (length) {
@@ -75,7 +75,7 @@ $(document).ready(function () {
 	
 	var processStartGameResponse = function(){
 		if (xhr.readyState==4 && xhr.status==200) {
-        	var data = JSON.parse(xhr.responseText);
+        	data = JSON.parse(xhr.responseText);
 			console.log(data);
 			if(data.opSuccess){
 				var url = "http://"+contest_server_name+":"+contest_server_port+"/prepare";	
@@ -89,7 +89,7 @@ $(document).ready(function () {
 	var processPrepareGameResponse = function(){
 		
 		if (xhr.readyState==4 && xhr.status==200) {
-        	var data = JSON.parse(xhr.responseText);
+        	data = JSON.parse(xhr.responseText);
 			console.log(data);
 			if(data.opSuccess){
 				var url = "http://"+quiz_server_name+":"+quiz_server_port+"/tfType";
@@ -111,7 +111,7 @@ $(document).ready(function () {
 	var processQuestionResponse = function(){
 				
 		if (xhr.readyState==4 && xhr.status==200) {
-        	var data = JSON.parse(xhr.responseText);
+        	data = JSON.parse(xhr.responseText);
 			console.log(data);
 			var gameId = data.gameID;
 			var gameCategory = data.gameCategory;
@@ -143,10 +143,10 @@ $(document).ready(function () {
 
 	var postAnswerResponse = function(){		
 		if (xhr.readyState==4 && xhr.status==200) {
-        	data = JSON.parse(xhr.responseText);			
-			if(data.opSuccess){
+        	var postAnswerResponse_data = JSON.parse(xhr.responseText);			
+			if(postAnswerResponse_data.opSuccess){
 				
-				
+				//setTimeout(function(){changeQuestion()},1000);
 			}		
     	}
     		
