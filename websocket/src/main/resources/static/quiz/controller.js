@@ -58,6 +58,13 @@ $(document).ready(function () {
 		showElement("playGameContainer");
 		contestId =	$("#contestId").val();
 		gameId =	$("#gameId").val();	
+		
+		var gameNameDiv  = $('[name="playGameNameHeader"]'); 		
+		var quizGameNameHeaderDiv  = $('[name="quizGameNameHeader"]');
+		
+		gameNameDiv.text(gameId); 
+		gameNameDiv.text(gameId); 
+		
 		console.log(userId + "  " + companyId + "  " + locationId + "  " + departmentId + "  " + contestId + "  "+ gameId)
 		var url = "http://"+contest_server_name+":"+contest_server_port+"/ticket";
 		var requestData = JSON.stringify({"sessionIDAtGateway":randomString(4),"companyName":companyId,"contestID":contestId,"fromLocation":locationId,"fromDepartment":departmentId,"playerID":userId,"gameID":gameId});
