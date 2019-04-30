@@ -59,11 +59,9 @@ $(document).ready(function () {
 		contestId =	$("#contestId").val();
 		gameId =	$("#gameId").val();	
 		
-		var gameNameDiv  = $('[name="playGameNameHeader"]'); 		
-		var quizGameNameHeaderDiv  = $('[name="quizGameNameHeader"]');
+		var gameNameDiv  = $('[name="playGameNameHeader"]'); 						
+		gameNameDiv.text(gameId); 
 		
-		gameNameDiv.text(gameId); 
-		gameNameDiv.text(gameId); 
 		
 		console.log(userId + "  " + companyId + "  " + locationId + "  " + departmentId + "  " + contestId + "  "+ gameId)
 		var url = "http://"+contest_server_name+":"+contest_server_port+"/ticket";
@@ -74,6 +72,10 @@ $(document).ready(function () {
 	$('#playGameBtn').on('click', function(event) {
 		hideElement("playGameContainer");
 		showElement("QuizContainer");
+		
+		var quizGameNameHeaderDiv  = $('[name="quizGameNameHeader"]');
+		quizGameNameHeaderDiv.text(gameId); 
+		
 		
 		url = "http://"+contest_server_name+":"+contest_server_port+"/start";
 		requestData = JSON.stringify({"companyID":companyId,"departmentID":departmentId,"gameID":gameId,"playerID":userId,"gameType":"SP","gameName":gameId,"gameSessionUUID":contestSessionId,"playedInTimezone":"Asia/Kolkata"});
