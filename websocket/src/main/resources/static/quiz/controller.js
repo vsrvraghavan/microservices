@@ -102,7 +102,16 @@ $(document).ready(function () {
 			console.log(data);
 			if(data.opSuccess){
 				var url = "http://"+quiz_server_name+":"+quiz_server_port+"/tfType";
-				var requestData = JSON.stringify({"gameID":gameId,"gameCategory":"Soccer","prefLang":"en_us","questionType":"TFType","countOfQues":3,"optionsPerAnswer":2});
+				var gameCategory = "Soccer" 
+				switch(gameId){
+					case "GAME1" :  gameCategory = "Soccer";
+						break;
+					case "GAME2" :  gameCategory = "History";
+						break;
+					case "GAME3" :  gameCategory = "India";
+						break;										
+				}
+				var requestData = JSON.stringify({"gameID":gameId,"gameCategory":gameCategory,"prefLang":"en_us","questionType":"TFType","countOfQues":3,"optionsPerAnswer":2});
 				postData(url, requestData, processQuestionResponse);
 			}			
 		}
