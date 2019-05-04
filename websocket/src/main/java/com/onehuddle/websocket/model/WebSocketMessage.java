@@ -7,7 +7,7 @@ package com.onehuddle.websocket.model;
  * @author ragha
  *
  */
-public class ChatMessage {
+public class WebSocketMessage {
     private MessageType type;
     private String content;
     private String sender;

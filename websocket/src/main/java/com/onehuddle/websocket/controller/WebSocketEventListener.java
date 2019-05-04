@@ -3,7 +3,7 @@
  */
 package com.onehuddle.websocket.controller;
 
-import com.onehuddle.websocket.model.ChatMessage;
+import com.onehuddle.websocket.model.WebSocketMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,11 +39,11 @@ public class WebSocketEventListener {
         if(username != null) {
             logger.info("User Disconnected : " + username);
 
-            ChatMessage chatMessage = new ChatMessage();
-            chatMessage.setType(ChatMessage.MessageType.LEAVE);
-            chatMessage.setSender(username);
+            WebSocketMessage webSocketMessage = new WebSocketMessage();
+            webSocketMessage.setType(WebSocketMessage.MessageType.LEAVE);
+            webSocketMessage.setSender(username);
 
-            messagingTemplate.convertAndSend("/channel/public", chatMessage);
+            messagingTemplate.convertAndSend("/channel/public", webSocketMessage);
         }
     }
 }

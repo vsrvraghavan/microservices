@@ -5,7 +5,7 @@ package com.onehuddle.websocket.controller;
 
 //import com.onehuddle.commons.contest.pojo.*;
 import com.onehuddle.commons.pojo.ContestLeaderboardMessage;
-import com.onehuddle.websocket.model.ChatMessage;
+import com.onehuddle.websocket.model.WebSocketMessage;
 
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -24,10 +24,10 @@ public class MessageController {
 
     @MessageMapping("/leaderboard.sendMessage/{companyId}")
     @SendTo("/channel/public/{companyId}")
-    public ChatMessage sendMessage(@DestinationVariable String companyId, @Payload ChatMessage chatMessage) {
+    public WebSocketMessage sendMessage(@DestinationVariable String companyId, @Payload WebSocketMessage webSocketMessage) {
     		System.out.println("sendMessage Received Chat Message");
 	
-        return chatMessage;
+        return webSocketMessage;
     }
     
     
@@ -41,11 +41,11 @@ public class MessageController {
 
     @MessageMapping("/leaderboard.addUser")
     @SendTo("/channel/public")
-    public ChatMessage addUser(@Payload ChatMessage chatMessage,
+    public WebSocketMessage addUser(@Payload WebSocketMessage webSocketMessage,
                                SimpMessageHeaderAccessor headerAccessor) {
         // Add username in web socket session
-        headerAccessor.getSessionAttributes().put("username", chatMessage.getSender());
-        return chatMessage;
+        headerAccessor.getSessionAttributes().put("username", webSocketMessage.getSender());
+        return webSocketMessage;
     }
 
 }
