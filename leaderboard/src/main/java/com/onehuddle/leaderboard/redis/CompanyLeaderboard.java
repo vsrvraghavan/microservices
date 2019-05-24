@@ -16,8 +16,11 @@ import com.onehuddle.commons.contest.pojo.ContestLB;
 import com.onehuddle.commons.contest.pojo.DashboardData;
 import com.onehuddle.commons.contest.pojo.DepartmentLB;
 import com.onehuddle.commons.contest.pojo.GameLB;
+import com.onehuddle.commons.contest.pojo.LB;
 import com.onehuddle.commons.contest.pojo.LocationLB;
 import com.onehuddle.commons.pojo.LeaderData;
+import com.onehuddle.leaderboard.pojo.GameScoreData;
+import com.onehuddle.leaderboard.util.GameRankLogger;
 
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.Tuple;
@@ -108,6 +111,8 @@ public class CompanyLeaderboard extends Leaderboard {
 	 * @param delta Score delta
 	 * @return Updated score
 	 */
+	
+	/*
 	public ObjectNode getContestScoreForMemberIn(String companyId, String contestId, String member) {
 		
 		ObjectMapper mapper = new ObjectMapper();
@@ -266,6 +271,228 @@ public class CompanyLeaderboard extends Leaderboard {
 		
 	}
 	
+	*/
+	
+	
+	/**
+	 * Change the score for a member by a certain delta in the named leaderboard
+	 *
+	 * @param leaderboardName Leaderboard
+	 * @param member Member
+	 * @param delta Score delta
+	 * @return Updated score
+	 */
+	//public ObjectNode getContestScoreForMemberIn(String companyId, String contestId, String member) {
+	public ContestLB getContestScoreForMemberIn(String companyId, String contestId, String member) {
+		
+		ObjectMapper mapper = new ObjectMapper();
+		System.out.println("member :  "+ member);
+		ObjectNode member_details_data = this.getContestMemberDetails(companyId, contestId, member);
+		List<String> games = getContestGames(companyId, contestId);		
+		ObjectNode contest_node = mapper.createObjectNode();
+		
+		ContestLB contestlb = new ContestLB();
+		DashboardData dashData = new  DashboardData();
+		List<LB> listLB = new ArrayList<LB>();
+		LB lb = new LB();
+		try {
+			ObjectNode member_details = (ObjectNode) mapper.readTree(mapper.writeValueAsString(member_details_data.get("member_details")));
+			
+			String locationId =  member_details.get("locationId").asText();
+			String departmentId = member_details.get("departmentId").asText();			
+			String leader_board = "company_"+companyId+"_contest_"+contestId+"_leaderboard";		
+			Double score = this.scoreForIn(leader_board, member);	
+			
+			Long contest_rank = this.rankForIn(leader_board, member, false);
+							
+			contest_node.put("contest_name", contestId);
+			contest_node.put("rank", contest_rank);
+			contest_node.put("score", score);
+			
+			dashData.setContestName(contestId);
+			
+			
+			
+			lb.setName(contestId);
+			lb.setRank(contest_rank);
+			lb.setScore(score);						
+			
+			listLB.add(lb);
+			contestlb.setLB(listLB);
+			
+			dashData.setContestLB(contestlb);
+			
+			
+			System.out.println(mapper.writeValueAsString(contest_node));
+			ArrayNode gamesScores = mapper.createArrayNode();
+			GameLB glb = new GameLB();
+			List<GameLB> glbList = new  ArrayList<GameLB>();
+			for(String gameId : games) {
+				leader_board = "company_"+companyId+"_contest_"+contestId+"_game_"+gameId+"_leaderboard";		
+				//transaction.zincrby(leader_board, delta, member);
+				score = this.scoreForIn(leader_board, member);
+				Long contest_game_rank = this.rankForIn(leader_board, member, false);
+				ObjectNode contest_game_node = mapper.createObjectNode();				
+				contest_game_node.put("game_name", gameId);
+				contest_game_node.put("rank", contest_game_rank);
+				contest_game_node.put("score", score);				
+				gamesScores.add(contest_game_node);
+				
+				listLB = new ArrayList<LB>();
+				lb.setName(contestId);
+				lb.setRank(contest_rank);
+				lb.setScore(score);						
+				
+				listLB.add(lb);
+				glb.setLB(listLB);
+				glbList.add(glb);
+			}
+			
+			contest_node.putPOJO("game", gamesScores);
+			
+			contestlb.setGameLB(glbList);
+			
+			
+			System.out.println(mapper.writeValueAsString(contest_node));
+			
+			
+			leader_board = "company_"+companyId+"_contest_"+contestId+"_location_"+locationId+"_leaderboard";		
+			//transaction.zincrby(leader_board, delta, member);
+			score = this.scoreForIn(leader_board, member);
+			Long contest_location_rank = this.rankForIn(leader_board, member, false);
+			ObjectNode contest_location_node = mapper.createObjectNode();
+			
+			contest_location_node.put("location_name", locationId);
+			contest_location_node.put("rank", contest_location_rank);
+			contest_location_node.put("score", score);
+						
+			LocationLB locLB = new  LocationLB();
+			
+			List<LocationLB> locLBList = new  ArrayList<LocationLB>();
+			
+			
+			gamesScores = mapper.createArrayNode();
+			for(String gameId : games) {			
+				leader_board = "company_"+companyId+"_contest_"+contestId+"_location_"+locationId+"_game_"+gameId+"_leaderboard";		
+				//transaction.zincrby(leader_board, delta, member);
+				score = this.scoreForIn(leader_board, member);
+				Long contest_location_game_rank = this.rankForIn(leader_board, member, false);
+				ObjectNode contest_location_game_node = mapper.createObjectNode();
+				contest_location_game_node.put("game_name", gameId);
+				contest_location_game_node.put("rank", contest_location_game_rank);
+				contest_location_game_node.put("score", score);
+				gamesScores.add(contest_location_game_node);
+				
+				listLB = new ArrayList<LB>();
+				lb.setName(contestId);
+				lb.setRank(contest_rank);
+				lb.setScore(score);						
+				
+				listLB.add(lb);
+				locLB.setLB(listLB);
+				locLBList.add(locLB);
+				
+				
+				
+			}
+			contest_location_node.putPOJO("game", gamesScores);
+			
+			contestlb.setLocationLB(locLBList);
+			
+			leader_board = "company_"+companyId+"_contest_"+contestId+"_location_"+locationId+"_department_"+departmentId+"_leaderboard";		
+			//transaction.zincrby(leader_board, delta, member);
+			score = this.scoreForIn(leader_board, member);
+			Long contest_location_department_rank = this.rankForIn(leader_board, member, false);
+			ObjectNode contest_location_department_node = mapper.createObjectNode();
+			contest_location_department_node.put("department_name", departmentId);
+			contest_location_department_node.put("rank", contest_location_department_rank);
+			contest_location_department_node.put("score", score);
+		
+			
+			gamesScores = mapper.createArrayNode();
+			for(String gameId : games) {	
+				leader_board = "company_"+companyId+"_contest_"+contestId+"_location_"+locationId+"_department_"+departmentId+"_game_"+gameId+"_leaderboard";		
+				//transaction.zincrby(leader_board, delta, member);
+				score = this.scoreForIn(leader_board, member);
+				Long contest_location_department_game_rank = this.rankForIn(leader_board, member, false);
+				ObjectNode contest_location_department_game_node = mapper.createObjectNode();
+				contest_location_department_game_node.put("game_name", gameId);
+				contest_location_department_game_node.put("rank", contest_location_department_game_rank);
+				contest_location_department_game_node.put("score", score);
+				gamesScores.add(contest_location_department_game_node);
+			}
+			
+			
+			
+			contest_location_department_node.putPOJO("game", gamesScores);		
+			
+			contest_location_node.putPOJO("department", contest_location_department_node);
+			contest_node.putPOJO("location", contest_location_node);
+			
+			
+			System.out.println(mapper.writeValueAsString(contest_node));
+			
+			
+			leader_board = "company_"+companyId+"_contest_"+contestId+"_department_"+departmentId+"_leaderboard";		
+			//transaction.zincrby(leader_board, delta, member);
+			score = this.scoreForIn(leader_board, member);
+			Long contest_department_rank = this.rankForIn(leader_board, member, false);
+			ObjectNode contest_department_node = mapper.createObjectNode();
+			contest_department_node.put("department_name", departmentId);
+			contest_department_node.put("rank", contest_department_rank);
+			contest_department_node.put("score", score);
+			
+			//node.put("department_rank", contest_department_rank);
+			
+			DepartmentLB deptLB = new  DepartmentLB();			
+			List<DepartmentLB> deptLBList = new  ArrayList<DepartmentLB>();
+						
+			gamesScores = mapper.createArrayNode();
+			for(String gameId : games) {
+				leader_board = "company_"+companyId+"_contest_"+contestId+"_department_"+departmentId+"_game_"+gameId+"_leaderboard";		
+				//transaction.zincrby(leader_board, delta, member);
+				score = this.scoreForIn(leader_board, member);
+				Long contest_department_game_rank = this.rankForIn(leader_board, member, false);
+				ObjectNode contest_department_game_node = mapper.createObjectNode();
+				contest_department_game_node.put("game_name", gameId);
+				contest_department_game_node.put("rank", contest_department_game_rank);
+				contest_department_game_node.put("score", score);
+				gamesScores.add(contest_department_game_node);
+				
+				listLB = new ArrayList<LB>();
+				lb.setName(contestId);
+				lb.setRank(contest_rank);
+				lb.setScore(score);						
+				
+				listLB.add(lb);
+				deptLB.setLB(listLB);
+				deptLBList.add(deptLB);
+				
+			}
+			
+			contest_department_node.putPOJO("game", gamesScores);
+			contest_node.putPOJO("department", contest_department_node);
+			
+			contestlb.setDepartmentLB(deptLBList);
+			
+			System.out.println(mapper.writeValueAsString(contest_node));
+			
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		
+		//return contest_node;//transaction.exec();
+		return contestlb;
+		
+		
+		
+	}
+	
 	
 	/**
 	 * Change the score for a member by a certain delta in the named leaderboard
@@ -280,6 +507,12 @@ public class CompanyLeaderboard extends Leaderboard {
 		
 		ObjectMapper mapper = new ObjectMapper();		
 
+		/*
+		GameRankLogger gameLogger = new GameRankLogger();		
+		GameScoreData gameData = new GameScoreData();				
+		gameLogger.log(gameData, user_rank, user_score);
+		gameLogger = null;
+		*/
 
 		//Transaction transaction = _jedis.multi();
 		

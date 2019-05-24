@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.onehuddle.commons.contest.pojo.ContestLB;
 import com.onehuddle.commons.contest.pojo.DashboardData;
 import com.onehuddle.commons.pojo.ContestData;
 import com.onehuddle.commons.pojo.LeaderData;
@@ -227,11 +228,12 @@ public class LeaderBoard {
 		
 		company_contest_leaderboard.putContestMemberDetails(companyId, contestId, memberId, locationId, departmentId);		
 		company_contest_leaderboard.putCompanyContestDepartmentMembersIn(companyId, contestId, departmentId, memberId);			
-		ObjectNode response = company_contest_leaderboard.updateContestScoreForMemberIn(companyId, contestId, locationId, departmentId, gameId, memberId, points_earned);		
+		ObjectNode response = company_contest_leaderboard.updateContestScoreForMemberIn(companyId, contestId, locationId, departmentId, gameId, memberId, points_earned);
+		
 		HttpUtils utils = new HttpUtils();			
 		utils.publishContestDashboard(companyId, company_contest_leaderboard.getContestDashboard(companyId, contestId));
 		        
-		return null;
+		return response;
 	}
 	
 	
@@ -244,8 +246,8 @@ public class LeaderBoard {
 	}
 	
 	
-	@RequestMapping(value="/contestUserleaderBoard/{companyId}/{contestId}", method = RequestMethod.GET)
-    public ObjectNode getContestUserLeaderboard(@PathVariable String companyId, @PathVariable String contestId, @RequestParam("user_id") String userId) { 
+	@RequestMapping(value="/contestUserleaderBoard/{companyId}/{contestId}", method = RequestMethod.GET) 
+	public ContestLB getContestUserLeaderboard(@PathVariable String companyId, @PathVariable String contestId, @RequestParam("user_id") String userId) {	
 		
 		CompanyLeaderboard company_contest_leaderboard = new CompanyLeaderboard("company_"+companyId+"_contest_"+contestId+"_leaderboard");
 		System.out.println("userId :  "+ userId);

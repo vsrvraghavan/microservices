@@ -15,12 +15,21 @@ public class GameScoreData {
 	 */
 	private String playerID;
 	private String playerName; // Optional
+	
 	private String companyID;
 	private String companyName;	// Optional
+	
+	private String contestID;
+	private String contestName;	// Optional
+	
 	private String departmentID; 
 	private String departmentName; // Optional
 	private String groupID;
 	private String groupName; // Optional
+	
+	private String locationID;
+	private String locationName; // Optional
+	
 	private Double score;
 	private String gameID;
 	private String gameName; // Optional
@@ -130,6 +139,38 @@ public class GameScoreData {
 
 
 
+	public String getContestID() {
+		return contestID;
+	}
+
+
+
+
+
+	public void setContestID(String contestID) {
+		this.contestID = contestID;
+	}
+
+
+
+
+
+	public String getContestName() {
+		return contestName;
+	}
+
+
+
+
+
+	public void setContestName(String contestName) {
+		this.contestName = contestName;
+	}
+
+
+
+
+
 	/**
 	 * @return the departmentID
 	 */
@@ -190,6 +231,38 @@ public class GameScoreData {
 	 */
 	public void setGroupID(String groupID) {
 		this.groupID = groupID;
+	}
+
+
+
+
+
+	public String getLocationID() {
+		return locationID;
+	}
+
+
+
+
+
+	public void setLocationID(String locationID) {
+		this.locationID = locationID;
+	}
+
+
+
+
+
+	public String getLocationName() {
+		return locationName;
+	}
+
+
+
+
+
+	public void setLocationName(String locationName) {
+		this.locationName = locationName;
 	}
 
 
