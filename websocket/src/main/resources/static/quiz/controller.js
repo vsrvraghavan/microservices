@@ -24,7 +24,7 @@ $(document).ready(function () {
 	var contest_server_port = "9090";
 
 	var quiz_server_name = "www.swan-speed.com";	
-	var quiz_server_port = "8999";	
+	var quiz_server_port = "8999	";	
 
 	var randomString = function (length) {
 		var chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -58,11 +58,6 @@ $(document).ready(function () {
 		showElement("playGameContainer");
 		contestId =	$("#contestId").val();
 		gameId =	$("#gameId").val();	
-		
-		var gameNameDiv  = $('[name="playGameNameHeader"]'); 						
-		gameNameDiv.text(gameId); 
-		
-		
 		console.log(userId + "  " + companyId + "  " + locationId + "  " + departmentId + "  " + contestId + "  "+ gameId)
 		var url = "http://"+contest_server_name+":"+contest_server_port+"/ticket";
 		var requestData = JSON.stringify({"sessionIDAtGateway":randomString(4),"companyName":companyId,"contestID":contestId,"fromLocation":locationId,"fromDepartment":departmentId,"playerID":userId,"gameID":gameId});
@@ -72,10 +67,6 @@ $(document).ready(function () {
 	$('#playGameBtn').on('click', function(event) {
 		hideElement("playGameContainer");
 		showElement("QuizContainer");
-		
-		var quizGameNameHeaderDiv  = $('[name="quizGameNameHeader"]');
-		quizGameNameHeaderDiv.text(gameId); 
-		
 		
 		url = "http://"+contest_server_name+":"+contest_server_port+"/start";
 		requestData = JSON.stringify({"companyID":companyId,"departmentID":departmentId,"gameID":gameId,"playerID":userId,"gameType":"SP","gameName":gameId,"gameSessionUUID":contestSessionId,"playedInTimezone":"Asia/Kolkata"});
@@ -102,16 +93,7 @@ $(document).ready(function () {
 			console.log(data);
 			if(data.opSuccess){
 				var url = "http://"+quiz_server_name+":"+quiz_server_port+"/tfType";
-				var gameCategory = "Soccer" 
-				switch(gameId){
-					case "GAME1" :  gameCategory = "Soccer";
-						break;
-					case "GAME2" :  gameCategory = "History";
-						break;
-					case "GAME3" :  gameCategory = "India";
-						break;										
-				}
-				var requestData = JSON.stringify({"gameID":gameId,"gameCategory":gameCategory,"prefLang":"en_us","questionType":"TFType","countOfQues":3,"optionsPerAnswer":2});
+				var requestData = JSON.stringify({"gameID":gameId,"gameCategory":"Soccer","prefLang":"en_us","questionType":"TFType","countOfQues":3,"optionsPerAnswer":2});
 				postData(url, requestData, processQuestionResponse);
 			}			
 		}
