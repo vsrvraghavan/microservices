@@ -283,7 +283,7 @@ public class CompanyLeaderboard extends Leaderboard {
 	 * @return Updated score
 	 */
 	//public ObjectNode getContestScoreForMemberIn(String companyId, String contestId, String member) {
-	public ContestLB getContestScoreForMemberIn(String companyId, String contestId, String member) {
+	public DashboardData getContestScoreForMemberIn(String companyId, String contestId, String member) {
 		
 		ObjectMapper mapper = new ObjectMapper();
 		System.out.println("member :  "+ member);
@@ -319,8 +319,6 @@ public class CompanyLeaderboard extends Leaderboard {
 			
 			listLB.add(lb);
 			contestlb.setLB(listLB);
-			
-			dashData.setContestLB(contestlb);
 			
 			
 			System.out.println(mapper.writeValueAsString(contest_node));
@@ -485,9 +483,9 @@ public class CompanyLeaderboard extends Leaderboard {
 			e.printStackTrace();
 		}
 
-		
+		dashData.setContestLB(contestlb);
 		//return contest_node;//transaction.exec();
-		return contestlb;
+		return dashData;
 		
 		
 		

@@ -247,7 +247,7 @@ public class LeaderBoard {
 	
 	
 	@RequestMapping(value="/contestUserleaderBoard/{companyId}/{contestId}", method = RequestMethod.GET) 
-	public ContestLB getContestUserLeaderboard(@PathVariable String companyId, @PathVariable String contestId, @RequestParam("user_id") String userId) {	
+	public DashboardData getContestUserLeaderboard(@PathVariable String companyId, @PathVariable String contestId, @RequestParam("user_id") String userId) {	
 		
 		CompanyLeaderboard company_contest_leaderboard = new CompanyLeaderboard("company_"+companyId+"_contest_"+contestId+"_leaderboard");
 		System.out.println("userId :  "+ userId);
