@@ -4,6 +4,7 @@
 package com.onehuddle.leaderboard;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.Hashtable;
 import java.util.List;
 
@@ -31,6 +32,7 @@ import com.onehuddle.commons.pojo.LeaderData;
 import com.onehuddle.commons.pojo.LocationsAndDepartments;
 import com.onehuddle.commons.pojo.PlayersAndPoint;
 import com.onehuddle.commons.pojo.RegisteredPlayer;
+import com.onehuddle.leaderboard.pojo.ExceptionResponse;
 import com.onehuddle.leaderboard.pojo.GameData;
 import com.onehuddle.leaderboard.pojo.GameScoreData;
 
@@ -237,26 +239,40 @@ public class LeaderBoard {
 	}
 	
 	
-	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@RequestMapping(value="/contestleaderBoard/{companyId}/{contestId}", method = RequestMethod.GET)
-    public DashboardData getContestLeaderboard(@PathVariable String companyId, @PathVariable String contestId) { 
+    public ResponseEntity<DashboardData> getContestLeaderboard(@PathVariable String companyId, @PathVariable String contestId) { 
 		
 		CompanyLeaderboard company_contest_leaderboard = new CompanyLeaderboard("company_"+companyId+"_contest_"+contestId+"_leaderboard");
-		return company_contest_leaderboard.getContestDashboard(companyId, contestId);
+		if(!company_contest_leaderboard.companyContestsExists(companyId, contestId)) {
+			ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), "Contest does not exist" , 200,HttpStatus.NOT_FOUND);			
+			return new ResponseEntity(exceptionResponse, HttpStatus.NOT_FOUND);						
+		}
+		//return company_contest_leaderboard.getContestDashboard(companyId, contestId);
+		return new ResponseEntity<DashboardData>(company_contest_leaderboard.getContestDashboard(companyId, contestId), HttpStatus.OK);
 	}
 	
-	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@RequestMapping(value="/contestUserleaderBoard/{companyId}/{contestId}", method = RequestMethod.GET) 
-	public DashboardData getContestUserLeaderboard(@PathVariable String companyId, @PathVariable String contestId, @RequestParam("user_id") String userId) {	
+	public ResponseEntity<DashboardData> getContestUserLeaderboard(@PathVariable String companyId, @PathVariable String contestId, @RequestParam("user_id") String userId) {	
 		
 		CompanyLeaderboard company_contest_leaderboard = new CompanyLeaderboard("company_"+companyId+"_contest_"+contestId+"_leaderboard");
-		System.out.println("userId :  "+ userId);
-		return company_contest_leaderboard.getContestScoreForMemberIn(companyId, contestId, userId);
+		if(!company_contest_leaderboard.companyContestsExists(companyId, contestId)) {
+			ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), "Contest does not exist" , 200,HttpStatus.NOT_FOUND);			
+			return new ResponseEntity(exceptionResponse, HttpStatus.NOT_FOUND);
+		}
+		
+		if(!company_contest_leaderboard.contestMemberExists(companyId, contestId, userId)) {
+			ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), "User does not exist" , 200,HttpStatus.NOT_FOUND);			
+			return new ResponseEntity(exceptionResponse, HttpStatus.NOT_FOUND);		
+		}
+		//return company_contest_leaderboard.getContestScoreForMemberIn(companyId, contestId, userId);
+		return new ResponseEntity<DashboardData>(company_contest_leaderboard.getContestScoreForMemberIn(companyId, contestId, userId), HttpStatus.OK);
 	}
 	
 	
 	@RequestMapping(value="/contestleaderBoard", method = RequestMethod.POST)
-    public ObjectNode updateContestLeaderboard(@RequestBody ContestData contestData) { 
+    public ResponseEntity<ObjectNode> updateContestLeaderboard(@RequestBody ContestData contestData) { 
 		
 		ObjectMapper mapper = new ObjectMapper();
 		
@@ -342,7 +358,7 @@ public class LeaderBoard {
 		
 		}
 		
-		return node;
+		return  new ResponseEntity<ObjectNode>(node, HttpStatus.OK);
 	}
 	
 	

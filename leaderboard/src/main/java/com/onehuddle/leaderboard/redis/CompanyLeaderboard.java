@@ -46,6 +46,15 @@ public class CompanyLeaderboard extends Leaderboard {
 	}
 	
 	
+	public boolean contestMemberExists(String companyId, String contestId, String memberId) {
+		
+		boolean retval = false;						   
+		String  key = "company_"+companyId+"_contest_"+contestId+"_player_details";		
+		retval = _jedis.hexists(key, memberId);
+						
+		return retval;		
+	}
+	
 	public Long putContestMemberDetails(String companyId, String contestId, String memberId, String locationId, String departmentId) {
 		
 		ObjectMapper mapper = new ObjectMapper();		
@@ -826,6 +835,20 @@ public class CompanyLeaderboard extends Leaderboard {
 	}
 	
 	
+	
+	
+	/**
+	 * Retrieve list of contests in the named company
+	 *
+	 * @param companyName CompanyName
+	 * @return list of contests in the named company
+	 */
+	
+	public boolean companyContestsExists(String companyId, String contestId) {
+		
+		Set<String> contests = _jedis.smembers("company_"+companyId+"_contests");		
+		return _jedis.sismember("company_"+companyId+"_contests", contestId);
+	}
 	
 	
 	/**
