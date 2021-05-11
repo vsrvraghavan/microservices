@@ -330,7 +330,10 @@ function getPanelData(){
 	 xmlhttp.onreadystatechange = function() {
 		 if (xmlhttp.readyState==4){
 				if (xmlhttp.status==200 || window.location.href.indexOf("http")==-1){	
-				  console.log(xmlhttp.responseText);
+				  alert("response");
+				  console.log("Response Data Start ");					
+				  console.log("Response Data" + xmlhttp.responseText);
+				  console.log("Response Data End ");					
 				  var jsondata=eval("("+xmlhttp.responseText+")"); //retrieve result as an JavaScript object
 				  console.log(jsondata);          
 				  setPanelCard(jsondata, true);
