@@ -1,0 +1,47 @@
+version: "3.7"
+
+networks:
+  frontend:
+    ipam:
+      config:
+        - subnet: 172.21.0.0/24
+
+services:
+  redis:
+    image: docker.io/redis:6.0.9
+    command: redis-server 
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    networks:
+        frontend:
+            ipv4_address: 172.21.0.2
+            
+    
+
+  leaderboard_server:
+    image: onehuddle-leaderboard-image:latest
+    restart: unless-stopped
+    ports:
+      - "8181:8181"
+    depends_on:
+      - redis      
+    networks:
+        frontend:
+            ipv4_address: 172.21.0.3  
+  
+  
+  
+  websocket_server:
+    image: onehuddle-websocket-image:latest
+    restart: unless-stopped
+    ports:
+      - "9000:9000"
+    depends_on:
+      - redis
+      - leaderboard_server
+    networks:
+        frontend:
+            ipv4_address: 172.21.0.4      
+  
+  
