@@ -59,7 +59,7 @@ public class HttpUtils {
 				//Gson gson = new Gson();
 				AdminPanelMessage apm = new AdminPanelMessage();
 				AdminPanelMessageData apmd = new AdminPanelMessageData();
-				String adminPanelServer = props.getProperty("admin_panel_server", "172.18.0.22");
+				String adminPanelServer = props.getProperty("admin_panel_server", "172.21.0.4");
 				String adminPanelServerPort = props.getProperty("admin_panel_server_port", "9000");
 				
 				if(props.getProperty("game_panel_1_name", "GAME1").equalsIgnoreCase(gameID)) {					
@@ -147,7 +147,7 @@ public class HttpUtils {
 		Integer leader_list_limit = 3;
 		
 		OneHuddleProperties props = OneHuddleProperties.getInstance();
-		String adminPanelServer = props.getProperty("admin_panel_server", "172.18.0.3");
+		String adminPanelServer = props.getProperty("admin_panel_server", "172.21.0.4");
 		String adminPanelServerPort = props.getProperty("admin_panel_server_port", "9000");
 		
 		RegisteredPlayer regplayer = contestData.getPlayersAndPoints().get(0).getRegisteredPlayer();
@@ -170,7 +170,7 @@ public class HttpUtils {
 	
 	public void publishContestDashboard(String companyId, DashboardData dahsBoardData) {
 		OneHuddleProperties props = OneHuddleProperties.getInstance();
-		String adminPanelServer = props.getProperty("admin_panel_server", "172.18.0.3");
+		String adminPanelServer = props.getProperty("admin_panel_server", "172.21.0.4");
 		String adminPanelServerPort = props.getProperty("admin_panel_server_port", "9000");
 		
 		
@@ -341,7 +341,7 @@ public class HttpUtils {
 		
 		
 		OneHuddleProperties props = OneHuddleProperties.getInstance();
-		String adminPanelServer = props.getProperty("admin_panel_server", "172.18.0.3");
+		String adminPanelServer = props.getProperty("admin_panel_server", "172.21.0.4");
 		String adminPanelServerPort = props.getProperty("admin_panel_server_port", "9000");
 		
 		
@@ -451,7 +451,7 @@ public class HttpUtils {
 				//Gson gson = new Gson();
 				AdminPanelMessage apm = new AdminPanelMessage();
 				AdminPanelMessageData apmd = new AdminPanelMessageData();
-				String adminPanelServer = props.getProperty("admin_panel_server", "172.18.0.3");
+				String adminPanelServer = props.getProperty("admin_panel_server", "172.21.0.4");
 				String adminPanelServerPort = props.getProperty("admin_panel_server_port", "9000");
 				
 				/*
