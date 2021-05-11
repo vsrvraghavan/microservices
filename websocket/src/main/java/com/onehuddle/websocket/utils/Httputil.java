@@ -29,7 +29,7 @@ public class Httputil {
 		
 		
 		try {
-			String url = "http://172.18.0.2:8181/contestleaderBoard/"+companyId+"/"+contestId+"";
+			String url = "http://172.21.0.3:8181/contestleaderBoard/"+companyId+"/"+contestId+"";
 			URL obj = new URL(url);
 			HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 			con.setRequestMethod("GET");
