@@ -60,7 +60,7 @@ function connect(event) {
         /////company_panel_label.innerHTML += " "+companyname;
 //        var socket = new SockJS('http://localhost:9000/ws');
 //        var socket = new SockJS('http://localhost:9000/dashqrapi/ws');        
-        var socket = new SockJS('http://192.168.1.15:9000/ws');
+        var socket = new SockJS('http://3.90.214.217:9000/ws');
         stompClient = Stomp.over(socket);
 
         stompClient.connect({}, onConnected, onError);
@@ -344,7 +344,7 @@ function getPanelData(){
 		   }
 	  }
 	 //var url ='http://localhost:9000/getpaneldata';
-	 var url ='http://192.168.1.15:9000/getcontestdashoard?companyid='+companyname+'&contestid='+contestname;
+	 var url ='http://3.90.214.217:9000/getcontestdashoard?companyid='+companyname+'&contestid='+contestname;
 	 
 	 xmlhttp.open('GET',url,true);
      xmlhttp.send(null);     
